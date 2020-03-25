@@ -3,7 +3,7 @@
 */
 import React from 'react';
 import {
-    View,Text,Image,StyleSheet
+    View,Text,Image,StyleSheet,DatePickerIOS,Picker
 } from 'react-native';
 
 import { Input,CheckBox,Slider,Button } from 'react-native-elements';
@@ -24,7 +24,7 @@ class App extends React.Component {
     static navigationOptions = ({navigation}) =>{
       return {
 
-        title:"添加课程",
+        title:"添加里程碑",
         headerStyle:{
           backgroundColor:"skyblue"
         },
@@ -50,7 +50,7 @@ class App extends React.Component {
         return (
           <View >
          <Input
-  placeholder='课程名称'
+  placeholder='名称'
 />
 <Input
   placeholder= {String(Math.floor(this.state.coin*10)+"金币")} 
@@ -59,29 +59,22 @@ class App extends React.Component {
 <Slider value={this.state.coin}
     onValueChange={v => this.setState({ coin:v })}
   />
+<Text>到期时间</Text>
 
-
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
+<DatePickerIOS
+mode='date'
+locale='zh-cn'
+date={new Date()}
+></DatePickerIOS>
+<Text>关联课程</Text>
+<Picker
+ /*  selectedValue={this.state.language} */
+  onValueChange={(itemValue, itemIndex) =>
+    this.setState({language: itemValue})
+  }>
+  <Picker.Item label="Java" value="java" />
+  <Picker.Item label="JavaScript" value="js" />
+</Picker>
 
 <Button
   title='提交'

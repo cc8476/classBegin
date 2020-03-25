@@ -17,9 +17,10 @@ class App extends React.Component {
           tableData: [
             ['语文', '数学', '英语','语文', '数学', '英语', '围棋'],
             ['语文', '数学', '英语','语文', '数学', '英语', '围棋'],
-            ['语文', '数学',  '围棋'],
-            ['语文', '数学', '英语','语文'],
-            ['', '', '英语','', '数学', '英语', '围棋'],
+            ['语文', '数学', '英语','语文', '数学', '英语', '围棋'],
+            ['语文', '数学', '英语','语文', '数学', '英语', '围棋'],
+            ['语文', '数学', '英语','语文', '数学', '英语', '围棋'],
+            ['语文', '数学', '英语','语文', '数学', '英语', '围棋'],
           ]
         }
 
@@ -64,6 +65,12 @@ class App extends React.Component {
             navigation.navigate('Add');
           }}
           ></Button>
+        },headerRight:()=>{
+          return <Button title="里程碑" 
+          onPress={() => {
+            navigation.navigate('AddMile');
+          }}
+          ></Button>
         } 
       }
     } 
@@ -73,10 +80,14 @@ class App extends React.Component {
         return (
           <View style={styles.container}>
            <Table borderStyle={{borderWidth: 1}}>
-            <Row data={this.state.tableHead} flexArr={[1, 2, 1, 1]} style={styles.head} textStyle={styles.text}/>
+            <Row data={this.state.tableHead} flexArr={[1, 1, 1, 1]} style={styles.head} textStyle={styles.text}/>
             <TableWrapper style={styles.wrapper}>
               <Col data={this.state.tableTitle} style={styles.title} heightArr={[28,28]} textStyle={styles.text}/>
-              <Rows data={this.state.tableData} flexArr={[2, 1, 1]} style={styles.row} textStyle={styles.text}/>
+              <Rows 
+              onPress={() => {
+                this.props.navigation.navigate('ClassDetail');
+              }}
+               data={this.state.tableData} flexArr={[1, 1, 1]} style={styles.row} textStyle={styles.text}/>
             </TableWrapper>
           </Table> 
         </View>

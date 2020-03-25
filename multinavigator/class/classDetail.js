@@ -3,7 +3,7 @@
 */
 import React from 'react';
 import {
-    View,Text,Image,StyleSheet
+    View,Text,Image,StyleSheet,DatePickerIOS,Picker
 } from 'react-native';
 
 import { Input,CheckBox,Slider,Button } from 'react-native-elements';
@@ -24,7 +24,7 @@ class App extends React.Component {
     static navigationOptions = ({navigation}) =>{
       return {
 
-        title:"添加课程",
+        title:"课程详细",
         headerStyle:{
           backgroundColor:"skyblue"
         },
@@ -49,43 +49,18 @@ class App extends React.Component {
     render() {
         return (
           <View >
-         <Input
-  placeholder='课程名称'
-/>
-<Input
-  placeholder= {String(Math.floor(this.state.coin*10)+"金币")} 
-  value={String(Math.floor(this.state.coin*10)+"金币")} 
-/>
-<Slider value={this.state.coin}
-    onValueChange={v => this.setState({ coin:v })}
-  />
+       <Text>语文一课一练</Text>
+       <Text>每日金币：3</Text>
+
+<Text onPress={() => {
+                this.props.navigation.navigate('MileDetail');
+              }}>关联里程碑：[周五]-[期末考试]</Text>
 
 
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
+<Text>一周5节课</Text>
+<Text>已上10节课了</Text>
 
-<Button
-  title='提交'
-/>
+
 
         </View>
         );
