@@ -19,13 +19,13 @@ const TABS = {
           return (
             <Image
               style={{width: 20, height: 20}}
-              source={require('./assets/c.png')}></Image>
+              source={require('./assets/class.png')}></Image>
           );
         } else {
           return (
             <Image
               style={{width: 20, height: 20}}
-              source={require('./assets/d.png')}></Image>
+              source={require('./assets/class.png')}></Image>
           );
         }
       },
@@ -40,13 +40,13 @@ const TABS = {
           return (
             <Image
               style={{width: 20, height: 20}}
-              source={require('./assets/a.png')}></Image>
+              source={require('./assets/static.png')}></Image>
           );
         } else {
           return (
             <Image
               style={{width: 20, height: 20}}
-              source={require('./assets/b.png')}></Image>
+              source={require('./assets/static.png')}></Image>
           );
         }
       },
@@ -61,13 +61,13 @@ const TABS = {
           return (
             <Image
               style={{width: 20, height: 20}}
-              source={require('./assets/e.png')}></Image>
+              source={require('./assets/score.png')}></Image>
           );
         } else {
           return (
             <Image
               style={{width: 20, height: 20}}
-              source={require('./assets/f.png')}></Image>
+              source={require('./assets/score.png')}></Image>
           );
         }
       },
