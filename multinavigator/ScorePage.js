@@ -1,27 +1,32 @@
-/*
-* Created by joechen  2020-03-22 18:28
-*/
 import React from 'react';
-import {
-    View,Text
-} from 'react-native';
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        return (
-            <View
-            style={{
-              flex: 1,
-              backgroundColor: 'red',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text>打分</Text>
-          </View>
-        );
-    }
+import {View, Text, Button} from 'react-native';
+
+import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
+
+import {createBottomTabNavigator} from 'react-navigation-tabs'
+
+
+import Score from './score/Score';
+
+//堆栈方式的导航
+const Rootstack = createStackNavigator({
+    Score: Score,
+},
+{
+  navigationOptions:(
+    ({navigation})=>(
+      {
+        tabBarVisible:navigation.state.index===0
+      }
+
+    )
+  )
 }
 
-export default App;
+);
+
+//这里不用输出AppContainer
+const AppContainer = createAppContainer(Rootstack);
+
+export default Rootstack;

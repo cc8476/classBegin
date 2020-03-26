@@ -7,13 +7,11 @@ import {createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs'
 
 
-import Home1 from './HomePageSon1';
-import Home2 from './HomePageSon2';
+import Static from './static/Static';
 
 //堆栈方式的导航
 const Rootstack = createStackNavigator({
-  Home: Home1,
-  Detail: Home2,
+  Static: Static
 },
 {
   navigationOptions:(

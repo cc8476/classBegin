@@ -11,8 +11,6 @@ import AddClass  from './class/addClass'
 import AddMile  from './class/addMile'
 import ClassDetail  from './class/classDetail'
 import MileDetail  from './class/mileDetail'
-//import ClassTable  from './HomePageSon1'
-import Home2 from './HomePageSon2';
 
 //堆栈方式的导航
 const Rootstack = createStackNavigator({
