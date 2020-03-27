@@ -14,3 +14,13 @@
 
 
 ****
+
+
+watchman watch-del-all
+rm -rf node_modules
+yarn config set registry https://registry.npm.taobao.org
+
+yarn install
+rm -rf /tmp/metro-*
+pod install
+

@@ -5,6 +5,8 @@ import React from 'react';
 import {
     View,Text
 } from 'react-native';
+import Modal from '../modal/modal';
+
 
 import { Input,CheckBox,Slider,Button } from 'react-native-elements';
 
@@ -13,8 +15,14 @@ class App extends React.Component {
         super(props);
         this.state={
             coin:0.5,
-            parentCoin:0.5
+            parentCoin:0.5,
+            modalVisible:false,
+            modalText:""
         };
+    }
+
+    setModalVisible(visible,text) {
+      this.setState({ modalVisible: visible,modalText:text });
     }
 
     static navigationOptions = ({navigation}) =>{
@@ -42,6 +50,8 @@ class App extends React.Component {
         return (
             <View>
 
+<Modal text={this.state.modalText} modalVisible={this.state.modalVisible} ></Modal>
+
 <Input
   placeholder= {"自己打分:"+String(Math.floor(this.state.coin*10)+"金币")} 
   value={String(Math.floor(this.state.coin*10)+"金币")} 
@@ -61,6 +71,9 @@ class App extends React.Component {
 
 <Button
   title='提交'
+  onPress={() => {
+    this.setModalVisible(!this.state.modalVisible,"恭喜得到5分!!!");
+  }}
 />
 
           </View>
