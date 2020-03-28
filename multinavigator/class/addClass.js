@@ -9,6 +9,7 @@ import {
 import data from '../data/data';
 
 import { Input,CheckBox,Slider,Button } from 'react-native-elements';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
 
@@ -18,7 +19,8 @@ class App extends React.Component {
         
         this.state ={
           coin:5,
-          className:""
+          className:"",
+          checked:false
         }
 
     }
@@ -74,9 +76,14 @@ class App extends React.Component {
 
 <CheckBox
   title='Click Here'
+  checked={this.state.checked}
+
+  onPress={() => this.setState({checked: !this.state.checked})}
 />
 <CheckBox
   title='Click Here'
+
+  onPress={() => this.setState({checked: !this.state.checked})}
 />
 <CheckBox
   title='Click Here'
