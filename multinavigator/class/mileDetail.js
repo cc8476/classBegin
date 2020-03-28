@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { Input,CheckBox,Slider,Button } from 'react-native-elements';
+import data from '../data/data';
 
 
 
@@ -15,8 +16,44 @@ class App extends React.Component {
         super(props);
         
         this.state ={
-          coin:0.5
+          id:props.navigation.state.params.id,
+          data:{
+            name:"",
+            coin:0,
+            id:0,
+            uptime:0,
+            relateclass:0
+          }
         }
+
+    }
+
+    componentDidMount() {
+
+      data.Instance().getMileById(this.state.id).then(
+        (ret)=>{
+          this.setState({
+            data:{
+              name:ret.name,
+              coin:ret.coin,
+              id:ret.id,
+              relateclass:ret.relateclass,
+              uptime:ret.uptime
+            }
+          })
+
+          if(ret.relateclass>0) {
+            data.Instance().getClassById(ret.relateclass).then(
+              (ret)=>{
+                this.setState({
+                  classData:ret
+                })
+              }
+            )
+          }
+
+        }
+      )
 
     }
 
@@ -47,21 +84,23 @@ class App extends React.Component {
  
 
     render() {
+      let state =this.state;
+      console.log("state");
         return (
           <View >
-       <Text>[周五]-[期末考试]</Text>
-       <Text>总金币数：100</Text>
+       <Text>{state.data.name}</Text>
+       <Text>到期日:{state.data.uptime}</Text>
+       <Text>剩余 10 天</Text>
+       <Text>奖励金币:{state.data.coin}</Text>
+         <Text 
+         onPress={() => {
+           if(state.classData) {
+            this.props.navigation.navigate('ClassDetail', {id:state.classData.id })
+           }
+          
+        }}
 
-<Text onPress={() => {
-                this.props.navigation.navigate('ClassDetail');
-              }}>关联课程：语文一课一练</Text>
-
-
-<Text>日期：5-10</Text>
-<Text>剩余 10 天</Text>
-
-
-
+         >关联课程：{state.classData?state.classData.name:"无"}</Text> 
         </View>
         );
     }

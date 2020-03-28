@@ -6,6 +6,7 @@ import {
     View,Text
 } from 'react-native';
 import Modal from '../modal/modal';
+import data from '../data/data';
 
 
 import { Input,CheckBox,Slider,Button } from 'react-native-elements';
@@ -73,6 +74,7 @@ class App extends React.Component {
   title='提交'
   onPress={() => {
     this.setModalVisible(!this.state.modalVisible,"恭喜得到5分!!!");
+    data.Instance().addCoin(5);
   }}
 />
 

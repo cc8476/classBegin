@@ -6,6 +6,8 @@ import {
     View,Text,Image,StyleSheet
 } from 'react-native';
 
+import data from '../data/data';
+
 import { Input,CheckBox,Slider,Button } from 'react-native-elements';
 
 
@@ -15,7 +17,8 @@ class App extends React.Component {
         super(props);
         
         this.state ={
-          coin:0.5
+          coin:5,
+          className:""
         }
 
     }
@@ -49,15 +52,23 @@ class App extends React.Component {
     render() {
         return (
           <View >
-         <Input
+         <Input onChangeText={
+           (value)=>{
+              this.setState(
+                  {
+                      "className":value
+                  }
+              )
+           }
+         }
   placeholder='课程名称'
 />
 <Input
-  placeholder= {String(Math.floor(this.state.coin*10)+"金币")} 
-  value={String(Math.floor(this.state.coin*10)+"金币")} 
+  placeholder= {String((this.state.coin)+"金币")} 
+  value={String((this.state.coin)+"金币")} 
 />
-<Slider value={this.state.coin}
-    onValueChange={v => this.setState({ coin:v })}
+<Slider value={this.state.coin/10}
+    onValueChange={v => this.setState({ coin: Math.floor(v*10 )})}
   />
 
 
@@ -85,6 +96,12 @@ class App extends React.Component {
 
 <Button
   title='提交'
+  onPress= {
+    ()=>{
+        data.Instance().addClass(this.state);
+    }
+
+  }
 />
 
         </View>

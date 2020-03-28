@@ -83,7 +83,7 @@ class App extends React.Component {
 
           <Text>当前课程：共{user.classNum}门</Text>
 <Text>关联里程碑：共{user.mileNum}个</Text>
-<Text>金币总数：{user.mileNum}个</Text>
+<Text>金币总数：{user.coin}个</Text>
 <Text>打卡次数：{user.time}个</Text>
 
 
