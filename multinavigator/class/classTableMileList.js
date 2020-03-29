@@ -54,7 +54,7 @@ class App extends React.Component {
                       Output = ()=>(
 
                            (
-                            <View style={ {flex:1,backgroundColor:"#1d953f",margin:5,padding:5,justifyContent:"center",alignItems:"center"}}>
+                            <View style={ {flex:1,backgroundColor:"#7fb80e",margin:5,padding:5,justifyContent:"center",alignItems:"center"}}>
                             <Text style={{fontSize:12}}>还剩</Text>
                           <Text style={{fontSize:18,color:"white"}}>{leftDay}</Text>
                           <Text style={{fontSize:12}}>天</Text>

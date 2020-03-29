@@ -5,10 +5,7 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
-  TouchableOpacity,
-  Alert,
 } from 'react-native';
 import {
   Table,
@@ -96,7 +93,7 @@ class App extends React.Component {
       {
         headerLeft: () => {
           return (
-            <Button
+            <Button 
               type="clear"
               title="添加课程"
               onPress={() => {
@@ -108,6 +105,8 @@ class App extends React.Component {
         headerRight: () => {
           return (
             <Button
+
+          
               title="里程碑"
               type="clear"
               onPress={() => {
@@ -161,8 +160,6 @@ class App extends React.Component {
       }
     )
 
-    console.log('showmilesArr',showmilesArr);
-
     return (
       <View style={styles.container}>
         <Table style={{flexDirection: 'row'}} borderStyle={{borderWidth: 1}}>
@@ -189,7 +186,7 @@ class App extends React.Component {
           </TableWrapper>
         </Table>
 
-        <View>
+        <View style={{flexDirection:"column",justifyContent:"center",marginTop:20}}>
           <ButtonGroup
              onPress={
                 ()=>{
@@ -206,11 +203,13 @@ class App extends React.Component {
             containerStyle={{height: 25}}
           />
 
-          <Text>最近的里程碑:</Text>
-        </View>
+          <Text style={{margin:10}}>最近的里程碑:</Text>
+        
 
 
              <MileList navigation={this.props.navigation} showmilesArr={showmilesArr}></MileList>
+
+             </View>
 
         
 
@@ -224,9 +223,9 @@ export default App;
 
 const styles = StyleSheet.create({
   container: {flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff'},
-  singleHead: {width: 40, height: 40, backgroundColor: '#c8e1ff'},
-  head: {flex: 1, backgroundColor: '#c8e1ff'},
-  title: {flex: 2, backgroundColor: '#f6f8fa'},
+  singleHead: {width: 40, height: 40, backgroundColor: '#ffffff'},
+  head: {flex: 1, backgroundColor: '#7fb80e'},
+  title: {flex: 2, backgroundColor: '#7fb80e'},
   titleText: {marginRight: 6, textAlign: 'right'},
   text: {textAlign: 'center'},
   btn: {

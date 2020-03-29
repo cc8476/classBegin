@@ -163,6 +163,15 @@ class Proxy {
     });
   }
 
+    //删除课程
+    delClass(id) {
+
+      this.storage.remove({
+        key: 'class',
+        id: id
+      });
+    }
+
   //添加里程碑
   addMile(obj) {
     //更新用户的里程碑
@@ -212,6 +221,14 @@ class Proxy {
         )
       }
 
+    });
+  }
+
+  //删除里程碑
+  delMile(id) {
+    this.storage.remove({
+      key: 'mile',
+      id: id
     });
   }
 

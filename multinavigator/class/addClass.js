@@ -68,13 +68,7 @@ class App extends React.Component {
                     maximumValue = {10}
                     minimumValue = {0}
                     step = {1}
-        style={{marginLeft: 20,
-          marginRight: 20,
-          alignItems: "stretch",
-          justifyContent: "center"}}
           value={this.state.coin }
-          //thumbImage={require('../assets/a.png')}
-          thumbTintColor="#7fb80e"
           onValueChange={v => this.setState({coin: v })}
         />
 
