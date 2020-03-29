@@ -8,6 +8,8 @@ import {
 
 import { Input,CheckBox,Slider,Button } from 'react-native-elements';
 import data from '../data/data';
+import {title} from '../kit/common'
+
 
 
 class App extends React.Component {
@@ -63,25 +65,16 @@ class App extends React.Component {
 
 
     static navigationOptions = ({navigation}) =>{
-      return {
-
-        title:"课程详细",
-        headerStyle:{
-          backgroundColor:"skyblue"
-        },
-        headerTintColor:"#ff00ff",
-        headerTitleStyle:{
-          fontSize:20,
-          fontWeight:"bold"
-        },
+      return Object.assign({
          headerLeft:()=>{
           return <Button title="返回" 
+          type="clear"
           onPress={() => {
             navigation.navigate('Table');
           }}
           ></Button>
         } 
-      }
+      },title("课程详细"))
     } 
 
 

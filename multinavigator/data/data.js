@@ -122,7 +122,6 @@ class Proxy {
 
   //添加课程
   addClass(obj) {
-    console.warn('addClass');
     //更新用户的课程信息
     this.getUser().then(data => {
       let newData = data;
@@ -135,6 +134,19 @@ class Proxy {
 
       //更新课程表信息
 
+      //[false,true,true,false,true,true,true]
+      //转换成
+      //[2,3,5,6,7]
+      let dayArrayTransfer =[];
+      obj.dayArray.map(
+        (v,i)=>{
+          if(v) {
+            dayArrayTransfer.push(i+1);
+          }
+        }
+      )
+
+
       this.storage.save({
         key: 'class',
         id: newData.classNum,
@@ -144,7 +156,7 @@ class Proxy {
           starttime: new Date().getTime(),
           time: 0, //打卡次数,
           relatemile: -1,
-          dayArray: [1, 2, 3, 4],
+          dayArray: dayArrayTransfer,
           id: newData.classNum,
         },
       });
@@ -157,6 +169,7 @@ class Proxy {
     this.getUser().then(data => {
       let newData = data;
       let mileId = data.mileNum + 1;
+      newData.mileNum = mileId;
 
       this.storage.save({
         key: 'user',
@@ -174,7 +187,7 @@ class Proxy {
           starttime: new Date().getTime(),
           time: 0, //打卡次数,
           relateclass: obj.relateclass,
-          uptime: obj.uptime,
+          uptime: new Date(String(obj.uptime)).getTime(),
           id: mileId,
         },
       });
@@ -200,6 +213,26 @@ class Proxy {
       }
 
     });
+  }
+
+
+  //更新里程碑
+  updateMileById(id,score) {
+
+
+    this.getMileById(id).then(data => {
+      let newData = data;
+      newData.coinGot =  score;
+
+      this.addCoin(score);
+
+      this.storage.save({
+        key: 'mile',
+        id:id,
+        data: newData
+      });
+    });
+
   }
 }
 Proxy.ins = null;

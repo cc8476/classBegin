@@ -8,6 +8,7 @@ import {
 
 import { Input,CheckBox,Slider,Button } from 'react-native-elements';
 import data from '../data/data';
+import {title} from '../kit/common'
 
 
 
@@ -59,25 +60,16 @@ class App extends React.Component {
 
 
     static navigationOptions = ({navigation}) =>{
-      return {
-
-        title:"里程碑详细",
-        headerStyle:{
-          backgroundColor:"skyblue"
-        },
-        headerTintColor:"#ff00ff",
-        headerTitleStyle:{
-          fontSize:20,
-          fontWeight:"bold"
-        },
+      return Object.assign({
          headerLeft:()=>{
           return <Button title="返回" 
+          type="clear"
           onPress={() => {
             navigation.navigate('Table');
           }}
           ></Button>
         } 
-      }
+      },title('里程碑内容'));
     } 
 
 
@@ -101,6 +93,15 @@ class App extends React.Component {
         }}
 
          >关联课程：{state.classData?state.classData.name:"无"}</Text> 
+
+        <Button title="提交"
+          onPress={
+            ()=>{
+              data.Instance().updateMileById(state.data.id,50)
+            }
+          }
+        ></Button>
+
         </View>
         );
     }

@@ -2,6 +2,9 @@
 * Created by joechen  2020-03-22 18:28
 */
 import React from 'react';
+import {title} from '../kit/common'
+
+
 import {
     View,Text,Image
 } from 'react-native';
@@ -11,6 +14,8 @@ import Modal from '../modal/modal';
 import { Button } from 'react-native-elements';
 import data from '../data/data';
 
+
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class App extends React.Component {
     constructor(props) {
@@ -23,17 +28,19 @@ class App extends React.Component {
         }
     }
 
-     static navigationOptions ={
+     static navigationOptions =  title("统计");
+     
+    /*  {
       title:"统计",
       headerStyle:{
-        backgroundColor:"skyblue"
+        backgroundColor:"#fffef9"
       },
-      headerTintColor:"#ff00ff",
+      headerTintColor:"#1a2933",
       headerTitleStyle:{
-        fontSize:20,
+        fontSize:18,
         fontWeight:"bold"
       }
-    } 
+    }  */
 
     setModalVisible(visible,text) {
       this.setState({ modalVisible: visible,modalText:text });
@@ -46,7 +53,6 @@ class App extends React.Component {
         autoSync: true, // 设置为false的话，则等待sync方法提供的最新数据(当然会需要更多时间)。
       })
       .then(ret => {
-        console.warn("ret",ret);
         this.setState({ user: ret });
       })
       .catch(err => {
@@ -57,7 +63,6 @@ class App extends React.Component {
     render() {
 
       let user  = this.state.user;
-      console.warn("user",user)
         return (
 
          
@@ -100,6 +105,60 @@ class App extends React.Component {
             data.Instance().clearData();
           }}
           ></Button>
+
+
+
+
+<Button
+  title="Solid Button"
+/>
+
+<Button
+  title="Outline button"
+  type="outline"
+/>
+
+<Button
+  title="Clear button"
+  type="clear"
+/>
+
+<Button
+  icon={
+    <Icon
+      name="arrow-right"
+      size={15}
+      color="white"
+    />
+  }
+  title="Button with icon component"
+/>
+
+<Button
+  icon={{
+    name: "arrow-right",
+    size: 15,
+    color: "white"
+  }}
+  title="Button with icon object"
+/>
+
+<Button
+  icon={
+    <Icon
+      name="arrow-right"
+      size={15}
+      color="white"
+    />
+  }
+  iconRight
+  title="Button with right icon"
+/>
+
+<Button
+  title="Loading button"
+  loading
+/>
 
 
            

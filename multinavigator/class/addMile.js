@@ -13,7 +13,10 @@ import {
 
 import data from '../data/data';
 
-import {Input, CheckBox, Slider, Button} from 'react-native-elements';
+import {Input, CheckBox, Slider, Button,Icon} from 'react-native-elements';
+import {title} from '../kit/common'
+
+
 
 class App extends React.Component {
   constructor(props) {
@@ -22,33 +25,26 @@ class App extends React.Component {
     this.state = {
       coin: 50,
       mileName: '',
-      relateclass: 2,
-      uptime: new Date().getTime(),
-      classes: [],
+      relateclass: -1,
+      uptime: new Date(),
+      classes: []
     };
   }
 
   static navigationOptions = ({navigation}) => {
-    return {
-      title: '添加里程碑',
-      headerStyle: {
-        backgroundColor: 'skyblue',
-      },
-      headerTintColor: '#ff00ff',
-      headerTitleStyle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-      },
+    return Object.assign({
+      
       headerLeft: () => {
         return (
           <Button
             title="返回"
+            type="clear"
             onPress={() => {
               navigation.navigate('Table');
             }}></Button>
         );
       },
-    };
+    },title("添加里程碑"));
   };
 
   componentDidMount() {
@@ -76,36 +72,51 @@ class App extends React.Component {
     }
 
     return (
-      <View>
-        <Input
+      <View style={{backgroundColor:"#ffffff"}}>
+        <Input style={{padding:5}}
           onChangeText={value => {
             this.setState({
               mileName: value,
             });
           }}
+          leftIcon={{ type: 'entypo', name: 'open-book' }}
+          leftIconContainerStyle={{marginRight:8}}
           placeholder="请输入里程碑"
         />
         <Input
           placeholder={String(this.state.coin + '金币')}
           value={String(this.state.coin + '金币')}
+          leftIcon={{ type: 'font-awesome', name: 'stop-circle-o' }}
+          leftIconContainerStyle={{marginRight:8}}
+          disabled
         />
         <Slider
-          value={this.state.coin / 100}
-          onValueChange={v => this.setState({coin: Math.floor(v * 100)})}
+            maximumValue = {100}
+            minimumValue = {0}
+            step = {1}
+            style={{marginLeft: 20,
+              marginRight: 20,
+              alignItems: "stretch",
+              justifyContent: "center"}}
+              value={this.state.coin }
+          value={this.state.coin }
+
+          thumbTintColor="#7fb80e"
+          onValueChange={v => this.setState({coin: v})}
         />
-        <Text>到期时间</Text>
+
+        <Text style={{margin:10,fontSize:20}}>到期时间</Text>
 
         <DatePickerIOS
           mode="date"
           locale="zh-cn"
-          date={new Date()}
-          onDateChange={date => {
-            console.warn(date.getTime());
+          date = {this.state.uptime}
+           onDateChange={(date) => {
             this.setState({
-              uptime: date.getTime(),
+              uptime: date,
             });
-          }}></DatePickerIOS>
-        <Text>关联课程</Text>
+          }} ></DatePickerIOS>
+        <Text style={{margin:10,fontSize:20}}>关联课程</Text>
         <Picker
          mode={Picker.MODE_DIALOG}  
         selectedValue ={this.state.relateclass}
@@ -116,14 +127,29 @@ class App extends React.Component {
           {output}
         </Picker>
 
-        <Button title="提交" 
+        <Button
+        
+        style={{
+          padding:20
+        }}
+        title="提交" 
   onPress= {
     ()=>{
       console.log("this.state",this.state);
         data.Instance().addMile(this.state);
     }
 
-  }        />
+  } 
+   icon={
+            <Icon
+              name="check"
+              size={35}
+              color="white"
+            />
+          }
+  
+  
+  />
       </View>
     );
   }

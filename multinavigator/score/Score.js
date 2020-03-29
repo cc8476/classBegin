@@ -3,13 +3,16 @@
 */
 import React from 'react';
 import {
-    View,Text
+    View,Text,Image
 } from 'react-native';
 import Modal from '../modal/modal';
 import data from '../data/data';
+import {title} from '../kit/common'
 
 
-import { Input,CheckBox,Slider,Button } from 'react-native-elements';
+
+import { Card, ListItem, Button, Icon, Input,CheckBox,Slider } from 'react-native-elements'
+
 
 class App extends React.Component {
     constructor(props) {
@@ -27,27 +30,16 @@ class App extends React.Component {
     }
 
     static navigationOptions = ({navigation}) =>{
-        return {
-  
-          title:"每日打分",
-          headerStyle:{
-            backgroundColor:"skyblue"
-          },
-          headerTintColor:"#ff00ff",
-          headerTitleStyle:{
-            fontSize:20,
-            fontWeight:"bold"
-          }
-          
-        }
+        return title("每日打分")
       } 
-  
-
-
 
 
 
     render() {
+
+      
+
+
         return (
             <View>
 
@@ -77,6 +69,24 @@ class App extends React.Component {
     data.Instance().addCoin(5);
   }}
 />
+
+
+
+
+{/* 测试内容 */}
+{/* 测试内容 */}
+{/* 测试内容 */}
+
+
+{/* 测试内容 */}
+{/* 测试内容 */}
+{/* 测试内容 */}
+
+
+
+
+
+
 
           </View>
         );

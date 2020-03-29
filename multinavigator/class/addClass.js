@@ -1,119 +1,129 @@
 /*
-* Created by joechen  2020-03-22 18:28
-*/
+ * Created by joechen  2020-03-22 18:28
+ */
 import React from 'react';
-import {
-    View,Text,Image,StyleSheet
-} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 
 import data from '../data/data';
 
-import { Input,CheckBox,Slider,Button } from 'react-native-elements';
+import {Input, CheckBox, Slider, Button,Icon} from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-
+import {title} from '../kit/common';
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
-        
-        this.state ={
-          coin:5,
-          className:"",
-          checked:false
-        }
+  constructor(props) {
+    super(props);
 
-    }
-
-
-    static navigationOptions = ({navigation}) =>{
-      return {
-
-        title:"添加课程",
-        headerStyle:{
-          backgroundColor:"skyblue"
-        },
-        headerTintColor:"#ff00ff",
-        headerTitleStyle:{
-          fontSize:20,
-          fontWeight:"bold"
-        },
-         headerLeft:()=>{
-          return <Button title="返回" 
-          onPress={() => {
-            navigation.navigate('Table');
-          }}
-          ></Button>
-        } 
-      }
-    } 
-
-
- 
-
-    render() {
-        return (
-          <View >
-         <Input onChangeText={
-           (value)=>{
-              this.setState(
-                  {
-                      "className":value
-                  }
-              )
-           }
-         }
-  placeholder='课程名称'
-/>
-<Input
-  placeholder= {String((this.state.coin)+"金币")} 
-  value={String((this.state.coin)+"金币")} 
-/>
-<Slider value={this.state.coin/10}
-    onValueChange={v => this.setState({ coin: Math.floor(v*10 )})}
-  />
-
-
-<CheckBox
-  title='Click Here'
-  checked={this.state.checked}
-
-  onPress={() => this.setState({checked: !this.state.checked})}
-/>
-<CheckBox
-  title='Click Here'
-
-  onPress={() => this.setState({checked: !this.state.checked})}
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-<CheckBox
-  title='Click Here'
-/>
-
-<Button
-  title='提交'
-  onPress= {
-    ()=>{
-        data.Instance().addClass(this.state);
-    }
-
+    this.state = {
+      coin: 5,
+      className: '',
+      dayArray:[false,false,false,false,false,false,false]
+    };
   }
-/>
+
+  static navigationOptions = ({navigation}) => {
+    return Object.assign(
+      {
+        headerLeft: () => {
+          return (
+            <Button
+              title="返回"
+              type="clear"
+              onPress={() => {
+                navigation.navigate('Table');
+              }}></Button>
+          );
+        },
+      },
+      title('添加课程'),
+    );
+  };
+
+  render() {
+    return (
+      <View style={{backgroundColor:"#ffffff"}}>
+        <Input style={{padding:5}}
+          onChangeText={value => {
+            this.setState({
+              className: value,
+            });
+          }}
+          placeholder="课程名称"
+          leftIcon={{ type: 'entypo', name: 'open-book' }}
+          leftIconContainerStyle={{marginRight:8}}
+
+          //open-book
+
+         // coins
+        />
+        <Input
+          placeholder={String( this.state.coin + '金币')}
+          leftIcon={{ type: 'font-awesome', name: 'stop-circle-o' }}
+          leftIconContainerStyle={{marginRight:8}}
+          value={String(this.state.coin + '金币')}
+          disabled
+        />
+        <Slider
+                    maximumValue = {10}
+                    minimumValue = {0}
+                    step = {1}
+        style={{marginLeft: 20,
+          marginRight: 20,
+          alignItems: "stretch",
+          justifyContent: "center"}}
+          value={this.state.coin }
+          //thumbImage={require('../assets/a.png')}
+          thumbTintColor="#7fb80e"
+          onValueChange={v => this.setState({coin: v })}
+        />
+
+        <View style={{flexDirection:"row",flexWrap:"wrap",justifyContent:"space-evenly"}}>
+
+          {
+            ["周一","周二","周三","周四","周五","周六","周日"].map(
+              (v,i)=>{
+
+                return (
+                  <CheckBox key={i}
+                  title={v}
+                  checked={this.state.dayArray[i]}
+                  onPress={() => {
+                    let arr = this.state.dayArray;
+                    arr[i] = !arr[i];
+                    this.setState({
+                      dayArray: arr
+                    })
+      
+                  }}
+                />
+                )
+              }
+            )
+          }
 
         </View>
-        );
-    }
+
+        <Button
+        style={{
+          padding:20
+        }}
+          title="提交"
+          onPress={() => {
+            data.Instance().addClass(this.state);
+          }}
+
+          icon={
+            <Icon
+              name="check"
+              size={35}
+              color="white"
+            />
+          }
+        />
+      </View>
+    );
+  }
 }
 
 export default App;
