@@ -21,19 +21,41 @@ import MileList from './classTableMileList';
 import {title} from '../kit/common';
 
 class App extends React.Component {
+
+  
+
   constructor(props) {
     super(props);
 
-
-    this.state = {
+    this.firstData={
       tableData: [],
       miles: [],
       selected:0,  //里程碑按钮标签 1=未完成，0=已完成
       init:-2  //默认是-2，初始化class+1,初始化mile加1
-    };
+    }
+
+
+    this.state = this.firstData;
+  }
+
+  componentWillReceiveProps() {
+    this.initData();
+  }
+  shouldComponentUpdate() {
+    console.log("shouldComponentUpdate")
   }
 
   componentDidMount() {
+    this.initData();
+  }
+
+  initData() {
+
+    this.setState(
+      this.firstData
+
+    );
+
     let week = [['周①'], ['周②'], ['周③'], ['周④'], ['周⑤'], ['周⑥'], ['周⑦']];
 
     data
@@ -48,16 +70,23 @@ class App extends React.Component {
         })
 
         classes.map((v, i) => {
-          v.dayArray.map(i => {
+          v.dayArray.map((vv,ii) => {
+
+            let color= data.colorArray[ v.color || 0 ];
+
             const elementButton = () => (
-              <Text
+
+              <Text style={{backgroundColor:color,color:"#ffffff"}}
                 onPress={() => {
                   this.props.navigation.navigate('ClassDetail', {id: v.id});
                 }}>
                 {v.name}
               </Text>
             );
-            week[i - 1].push(elementButton());
+            if(vv) {
+              week[ii].push(elementButton());
+            }
+            
           });
         });
 
@@ -85,7 +114,7 @@ class App extends React.Component {
         this.setState({
           miles: ret,
         });
-      });
+      });    
   }
 
   static navigationOptions = ({navigation}) => {
@@ -186,7 +215,7 @@ class App extends React.Component {
           </TableWrapper>
         </Table>
 
-        <View style={{flexDirection:"column",justifyContent:"center",marginTop:20}}>
+        <View style={{flex:1,flexDirection:"column",justifyContent:"center",marginTop:20}}>
           <ButtonGroup
              onPress={
                 ()=>{
@@ -204,9 +233,7 @@ class App extends React.Component {
           />
 
           <Text style={{margin:10}}>最近的里程碑:</Text>
-        
-
-
+      
              <MileList navigation={this.props.navigation} showmilesArr={showmilesArr}></MileList>
 
              </View>

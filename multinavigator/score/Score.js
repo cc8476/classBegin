@@ -21,52 +21,175 @@ class App extends React.Component {
             coin:0.5,
             parentCoin:0.5,
             modalVisible:false,
-            modalText:""
-        };
-    }
+            modalText:"",
+            classes:[],
+            dayOutput:"",
+            scoreOption:1, //3个选项，分别是0-2
+            canRecord:false//是否可以打分
 
-    setModalVisible(visible,text) {
-      this.setState({ modalVisible: visible,modalText:text });
+
+        };
     }
 
     static navigationOptions = ({navigation}) =>{
         return title("每日打分")
       } 
 
+    componentDidMount() {
+      let weekday = ["日", "一", "二", "三", "四", "五", "六"];  
+      let day = new Date().getDay();  
+      let dayOutput = "星期"+ weekday[day];  
+      let date = new Date().toLocaleDateString();
+      dayOutput = "今天是 "+date  +" , "+  dayOutput;
+      this.setState({
+        dayOutput:dayOutput
+      })
+
+
+      data.Instance().getClassesByWeek(day).then(
+        (ret)=>{
+          console.log("ret",ret);
+          this.setState({
+            classes:ret
+          })
+        }
+      )
+
+      data.Instance().checkCanScore().then(
+        (result)=>{
+          console.log("result",result);
+          this.setState({
+
+            canRecord:result
+          })
+        }
+      ).catch(
+        (day)=>{
+          console.log("day",day);
+        }
+      )
+      
+      ;
+
+    }
+
+
+     getscale(min,max) {
+    
+      return Math.random()*(max-min)+min
+    }
+
 
 
     render() {
 
-      
-
+  
 
         return (
-            <View>
-
-<Modal text={this.state.modalText} modalVisible={this.state.modalVisible} ></Modal>
-
-<Input
-  placeholder= {"自己打分:"+String(Math.floor(this.state.coin*10)+"金币")} 
-  value={String(Math.floor(this.state.coin*10)+"金币")} 
-/>
-<Slider value={this.state.coin}
-    onValueChange={v => this.setState({ coin:v })}
-  />
+            <View style={{backgroundColor:"white",padding:10,margin:10}}>
+<Modal ref='modal'></Modal>
 
 
-<Input
-  placeholder= {"家长打分:"+String(Math.floor(this.state.parentCoin*10)+"金币")} 
-  value={String(Math.floor(this.state.parentCoin*10)+"金币")} 
-/>
-<Slider value={this.state.parentCoin}
-    onValueChange={v => this.setState({ parentCoin:v })}
-  />
+<Text style={{margin:5}}>
+{this.state.dayOutput}
+</Text>
+
+<Text style={{margin:5}}>今天学习的内容有：</Text>
+<View style={{flexDirection:"row"}}>
+{
+
+  this.state.classes.map(
+    (v)=>{
+      return (
+        <Text style={{margin:5}} key={v.id}
+        onPress={() => {
+          this.props.navigation.navigate('ClassDetail', {id: v.id});
+        }}>
+        {"["+v.name+"]"}
+      </Text>
+      )
+    }
+  )
+}
+
+</View>
+
+<Text style={{margin:15}}>给自己打个分吧</Text>
+
+
+{
+            data.scoreArray.map(
+              (v,i)=>{
+
+                return (
+                  <CheckBox 
+                  key={i}
+
+                  title={v}
+
+
+                  checked={  i==this.state.scoreOption? true:false }
+                  onPress={() => {
+                    
+                    this.setState({
+                      scoreOption: i
+                    })
+      
+                  }}
+                />
+                )
+
+
+            })
+
+        }
+
+
 
 <Button
-  title='提交'
+  title= {this.state.canRecord?"看看今天能得几分":"今天的得分是..."}
+  disabled={!this.state.canRecord}
   onPress={() => {
-    this.setModalVisible(!this.state.modalVisible,"恭喜得到5分!!!");
-    data.Instance().addCoin(5);
+
+
+    let totalCoin=0;
+    this.state.classes.map((v,i)=>{
+      totalCoin += v.coin;
+    })
+
+    
+    switch (this.state.scoreOption) {
+      case 0:
+          totalCoin =totalCoin *this.getscale(0.3,0.5);
+        break;
+
+        case 1:
+          totalCoin =totalCoin *this.getscale(0.6,0.8);
+        break;
+
+        case 2:
+          totalCoin =totalCoin *this.getscale(1,1.5);
+        break;
+    
+      default:
+        break;
+    }
+
+    totalCoin = Math.ceil(totalCoin);
+
+    data.Instance().addCoin(totalCoin).then(
+      ()=>{
+        this.refs.modal.setModalVisible(true,"恭喜得到"+totalCoin+"分");
+        this.props.navigation.navigate('Table', {
+          refresh:true
+        });
+
+        data.Instance().addRecord(totalCoin)
+
+
+      }
+    )
+    
   }}
 />
 

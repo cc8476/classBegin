@@ -15,6 +15,7 @@ import { Button } from 'react-native-elements';
 import data from '../data/data';
 
 
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 class App extends React.Component {
@@ -22,9 +23,7 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-           user:{},
-           modalVisible:false,
-           modalText:""
+           user:{}
         }
     }
 
@@ -42,9 +41,6 @@ class App extends React.Component {
       }
     }  */
 
-    setModalVisible(visible,text) {
-      this.setState({ modalVisible: visible,modalText:text });
-    }
 
 
     componentDidMount() {
@@ -75,7 +71,7 @@ class App extends React.Component {
               alignItems: 'center',
             }}>
 
-          <Modal text={this.state.modalText} modalVisible={this.state.modalVisible} ></Modal>
+           <Modal ref='modal'></Modal>
 
 
 
@@ -92,74 +88,30 @@ class App extends React.Component {
 <Text>打卡次数：{user.time}个</Text>
 
 
-
 <Button title="初始化数据" 
           onPress={() => {
             data.Instance().createData();
-            this.setModalVisible(!this.state.modalVisible,"初始化数据成功!!!");
+            this.refs.modal.setModalVisible(true,"初始化数据成功!!!");
           }}
           ></Button>
 
 <Button title="清除数据"
           onPress={() => {
+            this.refs.modal.setModalVisible(true,"清除ok!!!");    
             data.Instance().clearData();
           }}
           ></Button>
 
 
+{/* 测试数据 */}
+{/* 测试数据 */}
+{/* 测试数据 */}
+{/* 测试数据 */}
 
 
-<Button
-  title="Solid Button"
-/>
-
-<Button
-  title="Outline button"
-  type="outline"
-/>
-
-<Button
-  title="Clear button"
-  type="clear"
-/>
-
-<Button
-  icon={
-    <Icon
-      name="arrow-right"
-      size={15}
-      color="white"
-    />
-  }
-  title="Button with icon component"
-/>
-
-<Button
-  icon={{
-    name: "arrow-right",
-    size: 15,
-    color: "white"
-  }}
-  title="Button with icon object"
-/>
-
-<Button
-  icon={
-    <Icon
-      name="arrow-right"
-      size={15}
-      color="white"
-    />
-  }
-  iconRight
-  title="Button with right icon"
-/>
-
-<Button
-  title="Loading button"
-  loading
-/>
-
+{/* 测试数据 */}
+{/* 测试数据 */}
+{/* 测试数据 */}
 
            
           </View>

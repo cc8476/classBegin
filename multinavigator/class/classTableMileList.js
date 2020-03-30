@@ -4,7 +4,7 @@
 import React from 'react';
 import {
     View,
-    Text,ScrollView
+    Text,ScrollView,TouchableOpacity
   } from 'react-native';
 
   import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -14,7 +14,6 @@ import {
 class App extends React.Component {
     constructor(props) {
         super(props);
-        console.log("props",props)
 
         this.state= {
             showmilesArr:props.showmilesArr
@@ -28,11 +27,12 @@ class App extends React.Component {
             }
         )
     }
+    //cde6c7
     render() {
 
 
         return (
-            <ScrollView style={{flexDirection:"column",backgroundColor:"#cde6c7"}}>
+            <ScrollView style={{flex:1,flexDirection:"column",backgroundColor:"#cde6c7"}}>
 
              { 
                  this.state.showmilesArr.map((v, i) => {
@@ -41,7 +41,7 @@ class App extends React.Component {
                       Output = ()=>(
                             
                             <View style={ {flex:1,backgroundColor:"#ffce7b",margin:5,padding:5,justifyContent:"center",alignItems:"center"}}>
-                            <Text style={{fontSize:12}}>获得</Text>
+                            <Text style={{fontSize:12}}>已获</Text>
                             <Text style={{fontSize:12}}>金币</Text>
                           <Text style={{fontSize:18,color:"white"}}>{v.coinGot}</Text>
                           </View>
@@ -66,14 +66,17 @@ class App extends React.Component {
 
 
                     return (
-                      <View key={v.id} style={ {flexDirection:"row",height:80,backgroundColor:"#ffffff",margin:8,justifyContent:"space-between"}}>
+                      <TouchableOpacity
+                      onPress={() => {
+                        this.props.navigation.navigate('MileDetail', {id: v.id});
+                      }}
+                      
+                      key={v.id} style={ {flexDirection:"row",height:80,backgroundColor:"#ffffff",margin:8,justifyContent:"space-between"}}>
 
                         <View style={ {flex:8,height:60,backgroundColor:"#ffffff",margin:5,padding:5}}>
 
                           <Text
-                            onPress={() => {
-                              this.props.navigation.navigate('MileDetail', {id: v.id});
-                            }}>
+                            >
                             {v.name}
                           </Text>
                           <View style={{margin:5,flexDirection:"row",alignItems:"center"}}>
@@ -93,7 +96,7 @@ class App extends React.Component {
                           {Output()}
                           
 
-                        </View>
+                        </TouchableOpacity>
           
           
                       )

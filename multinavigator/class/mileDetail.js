@@ -14,6 +14,8 @@ import {
 import {Input, CheckBox, Slider, Button,Icon} from 'react-native-elements';
 import data from '../data/data';
 import {title} from '../kit/common';
+import Modal from '../modal/modal'
+
 
 class App extends React.Component {
   constructor(props) {
@@ -43,6 +45,8 @@ class App extends React.Component {
             id: ret.id,
             relateclass: ret.relateclass,
             uptime: ret.uptime,
+            coinGot:ret.coinGot
+
           },
         });
 
@@ -79,12 +83,35 @@ class App extends React.Component {
 
   render() {
     let state = this.state;
-    console.log('state');
+    console.log('state',state);
     let leftDay =Math.ceil( (state.data.uptime - new Date().getTime())/3600/24/1000)
+
+    let ButtonFinish;
+    if(!this.state.data.coinGot || this.state.data.coinGot<=0) {
+
+      console.log('ButtonFinish');
+      ButtonFinish =(<Button
+        title="完成"
+        onPress={() => {
+            data.Instance().updateMileById(state.data.id, state.data.coin).then(
+              ()=>{
+                this.refs.modal.setModalVisible(true,"完成！");
+                  this.props.navigation.navigate('Table', {
+                    refresh:true
+                  });
+              }
+            )
+          }}></Button>
+        );
+    }
 
 
     return (
       <View style={{padding: 10}}>
+
+<Modal ref='modal'></Modal>
+
+
         <View>
           <Text style={{fontSize: 25}}>{state.data.name}</Text>
         </View>
@@ -110,16 +137,23 @@ class App extends React.Component {
          
         </View>
 
-        <Button
-          title="完成"
-          onPress={() => {
-            data.Instance().updateMileById(state.data.id, 50);
-          }}></Button>
+        {ButtonFinish}
 
+        
         <Button
           title="删除"
           onPress={() => {
-            data.Instance().delMile(this.state.id);
+
+            data.Instance().delMile(this.state.id).then(
+              ()=>{
+                this.refs.modal.setModalVisible(true,"删除成功");
+                  this.props.navigation.navigate('Table', {
+                    refresh:true
+                  });
+              }
+            )
+
+
           }}
           buttonStyle={{backgroundColor: 'red'}}
           icon={<Icon name="delete-forever" size={35} color="white" />}

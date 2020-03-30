@@ -4,16 +4,16 @@
 import React from 'react';
 import {
   View,
-  Text,
-  Image,
-  StyleSheet,
-  DatePickerIOS,
-  Picker,
+  Text
 } from 'react-native';
 
-import {Input, CheckBox, Slider, Button,Icon} from 'react-native-elements';
+import {Input, CheckBox, Button,Icon} from 'react-native-elements';
 import data from '../data/data';
 import {title} from '../kit/common';
+import Modal from '../modal/modal'
+import Icon2 from 'react-native-vector-icons/FontAwesome';
+
+
 
 class App extends React.Component {
   constructor(props) {
@@ -29,6 +29,7 @@ class App extends React.Component {
         relatemile: 0,
         time: 0,
         starttime: 0,
+        color:0
       },
     };
   }
@@ -45,6 +46,7 @@ class App extends React.Component {
             coin: ret.coin,
             dayArray: ret.dayArray,
             id: ret.id,
+            color: ret.color,
             relatemile: ret.relatemile,
             time: ret.time,
             starttime: ret.starttime,
@@ -73,7 +75,9 @@ class App extends React.Component {
               title="返回"
               type="clear"
               onPress={() => {
-                navigation.navigate('Table');
+                navigation.navigate('Table',{
+                  refresh:true
+                });
               }}></Button>
           );
         },
@@ -96,6 +100,10 @@ class App extends React.Component {
     console.log('state', state);
     return (
       <View style={{padding:10}}>
+
+<Modal ref='modal'></Modal>
+
+
         <View>
           <Text style={{fontSize:25}}>{state.data.name}</Text>
         </View>
@@ -114,7 +122,74 @@ class App extends React.Component {
             里 程 碑  ：{state.mileData ? state.mileData.name : '无'}
           </Text>
 
-          <Text style={{margin:5}}>课程安排 ：{outPutDayArray}</Text>
+          <Text style={{margin:5}}>课程安排 ：</Text>
+
+           {
+            state.data.dayArray.map(
+              (v,i)=>{
+
+                return (
+                  <CheckBox key={i}
+                  title={"周"+(i+1)}
+                  checked={v}
+                  onPress={() => {
+                    let output = this.state.data;
+                    let arr = this.state.data.dayArray;
+                    arr[i] = !arr[i];
+                    output.dayArray =arr;
+                    this.setState({
+                      data: output
+                    })
+
+                    data.Instance().updateClassById(this.state.id,output)
+      
+                  }}
+                />
+                )
+              }
+            )
+          } 
+
+
+
+<Text style={{margin:5}}>课程标签 ：</Text>
+
+<View style={{margin:10,flexDirection:"row",flexWrap:"wrap",justifyContent:"space-evenly"}}>
+{
+            data.colorArray.map(
+              (v,i)=>{
+
+                return (
+                  <CheckBox 
+                  key={i}
+
+                  checkedIcon={<Icon2 name="square" size={28} color={v}/>}
+                  uncheckedIcon={<Icon2 name="square-o" size={28} color={v}/>}
+
+                  checked={  i==this.state.data.color? true:false }
+                  onPress={() => {
+
+                    let newData =this.state.data;
+                    newData.color =i;
+
+                    this.setState({
+                      data: newData
+                    })
+
+                    data.Instance().updateClassById(this.state.id,this.state.data);
+
+                    
+      
+                  }}
+                />
+                )
+
+
+            })
+
+        }
+</View>
+
 
         </View>
 
@@ -122,7 +197,15 @@ class App extends React.Component {
         
           title="删除"
           onPress={() => {
-            data.Instance().delClass(this.state.id);
+            data.Instance().delClass(this.state.id).then(
+              ()=>{
+                this.refs.modal.setModalVisible(true,"删除成功");
+                  this.props.navigation.navigate('Table', {
+                    refresh:true
+                  });
+              }
+            )
+            
           }}
 
           buttonStyle={

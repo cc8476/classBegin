@@ -5,16 +5,16 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
-  StyleSheet,
+  Alert,
   DatePickerIOS,
   Picker,
 } from 'react-native';
 
 import data from '../data/data';
 
-import {Input, CheckBox, Slider, Button,Icon} from 'react-native-elements';
+import {Input, Slider, Button,Icon} from 'react-native-elements';
 import {title} from '../kit/common'
+import Modal from '../modal/modal'
 
 
 
@@ -73,6 +73,10 @@ class App extends React.Component {
 
     return (
       <View style={{backgroundColor:"#ffffff"}}>
+
+<Modal ref='modal'></Modal>
+
+
         <Input style={{padding:5}}
           onChangeText={value => {
             this.setState({
@@ -130,8 +134,27 @@ class App extends React.Component {
         title="提交" 
   onPress= {
     ()=>{
-      console.log("this.state",this.state);
-        data.Instance().addMile(this.state);
+
+      if(!this.state.mileName) {
+        Alert.alert('请输入里程碑名称','something you\'ve forgotten');
+      }
+      else {
+        data.Instance().addMile(this.state).then(
+          ()=>{
+            this.refs.modal.setModalVisible(true,"添加成功");
+            this.props.navigation.navigate('Table', {
+              refresh:true
+            });
+          }
+        );
+
+
+
+
+
+      }
+
+       
     }
 
   } 
