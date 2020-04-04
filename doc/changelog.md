@@ -1,6 +1,7 @@
 
 
 app --- logo---
+app --- 名字 ：在info.plist的CFBundleDisplayName标签下面
 app --- 封面图---
 app --- 打包成文件
 有报错：Library not found for -lDoubleConversion
