@@ -30,6 +30,7 @@ class App extends React.Component {
         uptime: 0,
         relateclass: 0,
       },
+      scoreOption:0 //3个选项，分别是0-2
     };
   }
 
@@ -87,15 +88,29 @@ class App extends React.Component {
     let leftDay =Math.ceil( (state.data.uptime - new Date().getTime())/3600/24/1000)
 
     let ButtonFinish;
-    if(!this.state.data.coinGot || this.state.data.coinGot<=0) {
+    let needFinish = (!this.state.data.coinGot || this.state.data.coinGot<=0);
+    if(needFinish) {
 
-      console.log('ButtonFinish');
       ButtonFinish =(<Button
-        title="完成"
+        title="完成里程碑"
         onPress={() => {
-            data.Instance().updateMileById(state.data.id, state.data.coin).then(
+
+          let outputCoin=0;
+          switch(state.scoreOption) {
+            case 0:
+              outputCoin = 0.3 * state.data.coin;
+              break;
+              case 1:
+                outputCoin = 0.8 * state.data.coin;
+                break;
+                case 2:
+                  outputCoin = 1.5 * state.data.coin;
+                  break;
+          }
+
+            data.Instance().updateMileById(state.data.id, outputCoin).then(
               ()=>{
-                this.refs.modal.setModalVisible(true,"完成！");
+                this.refs.modal.setModalVisible(true,"恭喜你获得"+outputCoin+"枚金币!");
                   this.props.navigation.navigate('Table', {
                     refresh:true
                   });
@@ -120,7 +135,8 @@ class App extends React.Component {
           <Text style={{margin: 5}}>到期日     :  {new Date(state.data.uptime).toLocaleDateString()}</Text>
           <Text style={{margin: 5}}>剩余        :  {leftDay} 天</Text>
 
-          <Text style={{margin: 5}}>每日金币 :  {state.data.coin}</Text>
+          <Text style={{margin: 5}}>目标金币 :  {state.data.coin}</Text>
+          <Text style={{margin: 5}}>获得金币 :  {state.data.coinGot}</Text>
 
           <Text
             style={{margin: 5}}
@@ -137,10 +153,43 @@ class App extends React.Component {
          
         </View>
 
-        {ButtonFinish}
+        
+
+        {
+            needFinish && data.scoreArray.map(
+              (v,i)=>{
+
+                console.log(",,,",i,this.state.scoreOption)
+
+                return (
+                  <CheckBox 
+                  key={i}
+
+                  title={v}
+
+
+                  checked={  i==this.state.scoreOption? true:false }
+                  onPress={() => {
+                    this.setState({
+                      scoreOption: i
+                    })
+      
+                  }}
+                />
+                )
+
+
+            })
+
+        }
+
+      {ButtonFinish}
+
 
         
-        <Button
+
+        
+        <Button style={{fontSize:15}}
           title="删除"
           onPress={() => {
 

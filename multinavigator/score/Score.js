@@ -36,42 +36,40 @@ class App extends React.Component {
       } 
 
     componentDidMount() {
-      let weekday = ["日", "一", "二", "三", "四", "五", "六"];  
-      let day = new Date().getDay();  
-      let dayOutput = "星期"+ weekday[day];  
-      let date = new Date().toLocaleDateString();
-      dayOutput = "今天是 "+date  +" , "+  dayOutput;
-      this.setState({
-        dayOutput:dayOutput
-      })
-
-
-      data.Instance().getClassesByWeek(day).then(
-        (ret)=>{
-          console.log("ret",ret);
-          this.setState({
-            classes:ret
-          })
-        }
-      )
-
-      data.Instance().checkCanScore().then(
-        (result)=>{
-          console.log("result",result);
-          this.setState({
-
-            canRecord:result
-          })
-        }
-      ).catch(
-        (day)=>{
-          console.log("day",day);
-        }
-      )
-      
-      ;
+      this.initData();
 
     }
+
+  initData() {
+    let weekday = ["日", "一", "二", "三", "四", "五", "六"];
+    let day = new Date().getDay();
+    let dayOutput = "星期" + weekday[day];
+    let date = new Date().toLocaleDateString();
+    dayOutput = "今天是 " + date + " , " + dayOutput;
+    this.setState({
+      dayOutput: dayOutput
+    });
+    data.Instance().getClassesByWeek(day).then((ret) => {
+      console.log("ret", ret);
+      this.setState({
+        classes: ret
+      });
+    });
+    data.Instance().checkCanScore().then((result) => {
+      console.log("result", result);
+      this.setState({
+        canRecord: result
+      });
+    }).catch((day) => {
+      console.log("day", day);
+    });
+  }
+
+  componentDidMount() {
+    this._navListener = this.props.navigation.addListener('didFocus', () => {
+      this.initData();
+    });
+  }
 
 
      getscale(min,max) {

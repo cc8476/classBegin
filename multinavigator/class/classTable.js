@@ -92,7 +92,9 @@ class App extends React.Component {
 
         week.map((v, i) => {
           while (v.length <= 7) {
-            v.push('');
+            v.push(<Text onPress={() => {
+              this.props.navigation.navigate('Add');
+            }}>{"   "}</Text>);
           }
         });
 
@@ -172,22 +174,28 @@ class App extends React.Component {
 
     let milesArr = state.miles;
     let showmilesArr=[];
-    milesArr.filter(
+    milesArr.map(
       (v,i)=>{
+
+        const daytime =new Date(new Date(new Date() ).toLocaleDateString()).getTime()
+
         if(this.state.selected==0) {
-          if( v.uptime>new Date().getTime()) {
+          if( v.uptime>=daytime) {
             console.log("selet",0)
             showmilesArr.push(v);
           }
         }
         else if(this.state.selected==1) {
-          if( v.uptime<new Date().getTime()) {
+          if( v.uptime<daytime) {
             console.log("selet",1)
             showmilesArr.push(v);
           }
         }
       }
     )
+    showmilesArr.sort((a,b)=>{
+      return a.uptime - b.uptime;
+    })
 
     return (
       <View style={styles.container}>

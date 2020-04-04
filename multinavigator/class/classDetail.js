@@ -124,6 +124,8 @@ class App extends React.Component {
 
           <Text style={{margin:5}}>课程安排 ：</Text>
 
+          <View style={{flexDirection:"row",flexWrap:"wrap",justifyContent:"center"}}>
+
            {
             state.data.dayArray.map(
               (v,i)=>{
@@ -150,11 +152,13 @@ class App extends React.Component {
             )
           } 
 
+</View>
+
 
 
 <Text style={{margin:5}}>课程标签 ：</Text>
 
-<View style={{margin:10,flexDirection:"row",flexWrap:"wrap",justifyContent:"space-evenly"}}>
+<View style={{margin:10,flexDirection:"row",flexWrap:"wrap",justifyContent:"center"}}>
 {
             data.colorArray.map(
               (v,i)=>{
@@ -163,8 +167,8 @@ class App extends React.Component {
                   <CheckBox 
                   key={i}
 
-                  checkedIcon={<Icon2 name="square" size={28} color={v}/>}
-                  uncheckedIcon={<Icon2 name="square-o" size={28} color={v}/>}
+                  checkedIcon={<Icon2 name="square" size={18} color={v}/>}
+                  uncheckedIcon={<Icon2 name="square-o" size={18} color={v}/>}
 
                   checked={  i==this.state.data.color? true:false }
                   onPress={() => {

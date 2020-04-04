@@ -38,6 +38,11 @@ const TABS = {
     screen: StaticPage,
     navigationOptions: {
       tabBarLabel: '统计',
+      tabBarOnPress: (obj) => {
+        // 任务数据redux修改，点击每次查询
+        console.log("zzzz",obj)
+          obj.navigation.navigate('Static', {"refresh":true});
+      },
       tabBarIcon: ({focused})=>{
         if(focused) {
           return (<Icon name="bar-chart" size={24} color="#7fb80e" />);

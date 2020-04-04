@@ -78,7 +78,7 @@ class App extends React.Component {
           onValueChange={v => this.setState({coin: v })}
         />
 
-        <View style={{flexDirection:"row",flexWrap:"wrap",justifyContent:"space-evenly"}}>
+        <View style={{flexDirection:"row",flexWrap:"wrap",justifyContent:'center'}}>
 
           {
             ["周一","周二","周三","周四","周五","周六","周日"].map(
@@ -105,7 +105,7 @@ class App extends React.Component {
         </View>
 
         <Text style={{margin:10,fontSize:20}}>选择标签颜色</Text>
-        <View style={{margin:10,flexDirection:"row",flexWrap:"wrap",justifyContent:"space-evenly"}}>
+        <View style={{margin:10,flexDirection:"row",flexWrap:"wrap",justifyContent:"center"}}>
           
         {
             data.colorArray.map(

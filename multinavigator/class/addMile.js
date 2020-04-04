@@ -53,7 +53,8 @@ class App extends React.Component {
       .Instance()
       .getClasses()
       .then(classes => {
-        console.log('classes', classes);
+        classes.push({name:"无",id:-1})
+
         this.setState({
           classes: classes,
         });
@@ -61,15 +62,17 @@ class App extends React.Component {
   }
 
   render() {
-    let classList = this.state.classes;
+    let classList = [];
+    classList = this.state.classes;
     let output = [];
 
     for (let i = 0; i < classList.length; i++) {
       const ele = classList[i];
-      console.log(ele.name, ele.id);
-      const element = <Picker.Item label={ele.name} value={ele.id} key={ele.id}/>;
+      const element = <Picker.Item label={ele.name} value={ele.id} key={i}/>;
       output.push(element);
     }
+
+    
 
     return (
       <View style={{backgroundColor:"#ffffff"}}>
@@ -109,6 +112,7 @@ class App extends React.Component {
         <DatePickerIOS
           mode="date"
           locale="zh-cn"
+          minimumDate={new Date()}
           date = {this.state.uptime}
            onDateChange={(date) => {
             this.setState({
@@ -120,7 +124,6 @@ class App extends React.Component {
          mode={Picker.MODE_DIALOG}  
         selectedValue ={this.state.relateclass}
           onValueChange={(v, i) => {
-            console.log(v, i);
             this.setState({relateclass: v});
           }}>
           {output}

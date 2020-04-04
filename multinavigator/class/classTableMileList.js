@@ -9,6 +9,7 @@ import {
 
   import Icon from 'react-native-vector-icons/FontAwesome5';
   import Icon2 from 'react-native-vector-icons/MaterialIcons';
+  import { Button} from 'react-native-elements';
 
 
 class App extends React.Component {
@@ -29,13 +30,32 @@ class App extends React.Component {
     }
     //cde6c7
     render() {
+        console.log("this.state.showmilesArr",this.state.showmilesArr);
+
+              //一个都没有的情况：
+              let emptyDiv = (
+                <Button title="请去添加里程碑" style={{
+                  padding:20
+                }}
+                onPress={() => {
+                  this.props.navigation.navigate('AddMile');
+                }}
+                ></Button>
+              )
+
+
 
 
         return (
             <ScrollView style={{flex:1,flexDirection:"column",backgroundColor:"#cde6c7"}}>
+              {
+                (this.state.showmilesArr.length==0)&& emptyDiv
+
+              }
+
 
              { 
-                 this.state.showmilesArr.map((v, i) => {
+                  this.state.showmilesArr.map((v, i) => {
                   let Output
                     if(v.coinGot && v.coinGot>0) {
                       Output = ()=>(

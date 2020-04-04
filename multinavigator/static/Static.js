@@ -27,7 +27,7 @@ class App extends React.Component {
         }
     }
 
-     static navigationOptions =  title("统计");
+     static navigationOptions =  title("学习生涯");
      
     /*  {
       title:"统计",
@@ -44,6 +44,16 @@ class App extends React.Component {
 
 
     componentDidMount() {
+      this.initData()
+
+    }
+
+    componentWillReceiveProps() {
+      console.log("componentWillReceiveProps")
+      this.initData();
+    }
+
+    initData() {
       data.Instance().storage.load({
         key: 'user',
         autoSync: true, // 设置为false的话，则等待sync方法提供的最新数据(当然会需要更多时间)。
@@ -53,7 +63,6 @@ class App extends React.Component {
       })
       .catch(err => {
       });
-
     }
 
     render() {
@@ -65,27 +74,31 @@ class App extends React.Component {
 
             <View
             style={{
-              flex: 1,
-              backgroundColor: 'cyan',
-              justifyContent: 'center',
-              alignItems: 'center',
+              padding:10
             }}>
 
            <Modal ref='modal'></Modal>
 
 
 
+           <View style={{backgroundColor:"white",padding:10,margin:10}}>
 
-            <Text>{user.name}</Text>
-            <Image
-            style={{width:200,height:200}}
+           
+
+
+            <Text style={{margin:5}} >{user.name}</Text>
+            
+
+
+          <Text  style={{margin:5}}>当前课程：共{user.classNum}门</Text>
+<Text style={{margin:5}}>关联里程碑：共{user.mileNum}个</Text>
+<Text style={{margin:5}}>金币总数：{user.coin}个</Text>
+<Text style={{margin:5}}>打卡次数：{user.time}个</Text>
+
+
+<Image
+            style={{width:200,height:200,margin:5}}
             source={require("../assets/w1.jpeg")} ></Image>
-
-
-          <Text>当前课程：共{user.classNum}门</Text>
-<Text>关联里程碑：共{user.mileNum}个</Text>
-<Text>金币总数：{user.coin}个</Text>
-<Text>打卡次数：{user.time}个</Text>
 
 
 <Button title="初始化数据" 
@@ -113,7 +126,7 @@ class App extends React.Component {
 {/* 测试数据 */}
 {/* 测试数据 */}
 
-           
+           </View>
           </View>
         );
     }

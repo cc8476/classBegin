@@ -197,6 +197,16 @@ class Proxy {
     //删除课程
     delClass(id) {
 
+      this.getUser().then(data => {
+        let newData = data;
+        newData.classNum = data.classNum - 1;
+  
+        this.storage.save({
+          key: 'user',
+          data: newData,
+        });
+      });
+
       return this.storage.remove({
         key: 'class',
         id: id
@@ -267,6 +277,18 @@ class Proxy {
 
   //删除里程碑
   delMile(id) {
+
+    this.getUser().then(data => {
+      let newData = data;
+      newData.mileNum = data.mileNum - 1;
+
+      this.storage.save({
+        key: 'user',
+        data: newData,
+      });
+    });
+
+
     return this.storage.remove({
       key: 'mile',
       id: id
