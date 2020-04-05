@@ -116,7 +116,7 @@ class Proxy {
 
        ret.map(
         (v,i)=>{
-          if(v.dayArray[weekOrder-1]  ) {
+          if(v.dayArray[weekOrder]  ) {
             weekClasses.push(v); 
             console.log("vvvvv",v);
           }
@@ -322,7 +322,7 @@ class Proxy {
 
 
   //检查今天是否已经打卡
-  checkCanScore() {
+  getTodayClassCoin() {
     console.log("checkScore")
     return this.getUser().then(
       (user)=>{
@@ -340,12 +340,12 @@ class Proxy {
     ).then(
       (ret)=>{
         console.log("ret",ret)
-        return false;
+        return ret.coin;
       }
     ).catch(
       (err)=>{
         console.log("err",err)
-        return true;
+        return -1;
       } 
     )
   }

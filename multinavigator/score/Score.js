@@ -8,10 +8,11 @@ import {
 import Modal from '../modal/modal';
 import data from '../data/data';
 import {title} from '../kit/common'
-
+import CoinFall from '../kit/coinFall'
 
 
 import { Card, ListItem, Button, Icon, Input,CheckBox,Slider } from 'react-native-elements'
+import Icon2 from 'react-native-vector-icons/FontAwesome5';
 
 
 class App extends React.Component {
@@ -25,7 +26,10 @@ class App extends React.Component {
             classes:[],
             dayOutput:"",
             scoreOption:1, //3个选项，分别是0-2
-            canRecord:false//是否可以打分
+            canRecord:false,//是否可以打分
+            coinFallNum:0,  //金币掉落动画,
+            hasGotCoin:0
+
 
 
         };
@@ -41,8 +45,17 @@ class App extends React.Component {
     }
 
   initData() {
-    let weekday = ["日", "一", "二", "三", "四", "五", "六"];
+    let weekday = [ "一", "二", "三", "四", "五", "六","日"];
     let day = new Date().getDay();
+    //这里是从周日到周一，数据库是从周一到周日，要换算一下
+    if(day==0) {
+      day=6;
+    }
+    else {
+      day= day -1;
+    }
+
+
     let dayOutput = "星期" + weekday[day];
     let date = new Date().toLocaleDateString();
     dayOutput = "今天是 " + date + " , " + dayOutput;
@@ -55,10 +68,12 @@ class App extends React.Component {
         classes: ret
       });
     });
-    data.Instance().checkCanScore().then((result) => {
-      console.log("result", result);
+    data.Instance().getTodayClassCoin().then((coin) => {
+      console.log("coin", coin);
+      let result = (coin>-1)?false:true;
       this.setState({
-        canRecord: result
+        canRecord: result,
+        hasGotCoin:coin
       });
     }).catch((day) => {
       console.log("day", day);
@@ -81,12 +96,14 @@ class App extends React.Component {
 
     render() {
 
-  
+      let iconsArr=["sad-tear","smile","laugh"];
 
         return (
             <View style={{backgroundColor:"white",padding:10,margin:10}}>
+
 <Modal ref='modal'></Modal>
 
+<CoinFall count={this.state.coinFallNum}></CoinFall>
 
 <Text style={{margin:5}}>
 {this.state.dayOutput}
@@ -127,6 +144,10 @@ class App extends React.Component {
 
 
                   checked={  i==this.state.scoreOption? true:false }
+
+                  checkedIcon={<Icon2 name={iconsArr[i]} size={18} color={"green"} />}
+                  uncheckedIcon={<Icon2 name={iconsArr[i]} size={18}/>}
+
                   onPress={() => {
                     
                     this.setState({
@@ -145,9 +166,12 @@ class App extends React.Component {
 
 
 <Button
-  title= {this.state.canRecord?"看看今天能得几分":"今天的得分是..."}
+  title= {this.state.canRecord?"看看今天能得几分":"今天得到的金币一共有"+this.state.hasGotCoin +"枚"}
   disabled={!this.state.canRecord}
   onPress={() => {
+
+
+
 
 
     let totalCoin=0;
@@ -178,11 +202,28 @@ class App extends React.Component {
     data.Instance().addCoin(totalCoin).then(
       ()=>{
         this.refs.modal.setModalVisible(true,"恭喜得到"+totalCoin+"分");
-        this.props.navigation.navigate('Table', {
-          refresh:true
-        });
+
+        let showNum =(this.state.scoreOption+1)*5;
+        this.setState({
+          coinFallNum:showNum,
+          canRecord:false,
+          hasGotCoin:totalCoin
+        })
 
         data.Instance().addRecord(totalCoin)
+
+        setTimeout(() => {
+          this.setState({
+            coinFallNum:0
+          })
+        }, 8000);
+        /* this.props.navigation.navigate('Table', {
+          refresh:true
+        }); */
+        
+
+
+        
 
 
       }

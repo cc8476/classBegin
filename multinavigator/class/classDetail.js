@@ -4,7 +4,7 @@
 import React from 'react';
 import {
   View,
-  Text
+  Text,Alert
 } from 'react-native';
 
 import {Input, CheckBox, Button,Icon} from 'react-native-elements';
@@ -64,6 +64,17 @@ class App extends React.Component {
             });
         }
       });
+  }
+
+  delClass()  {
+    data.Instance().delClass(this.state.id).then(
+      ()=>{
+        this.refs.modal.setModalVisible(true,"删除成功");
+          this.props.navigation.navigate('Table', {
+            refresh:true
+          });
+      }
+    )    
   }
 
   static navigationOptions = ({navigation}) => {
@@ -201,15 +212,15 @@ class App extends React.Component {
         
           title="删除"
           onPress={() => {
-            data.Instance().delClass(this.state.id).then(
-              ()=>{
-                this.refs.modal.setModalVisible(true,"删除成功");
-                  this.props.navigation.navigate('Table', {
-                    refresh:true
-                  });
-              }
-            )
             
+            Alert.alert('确认删除这个课程吗？','',
+            [
+              {text:"是的", onPress:()=>{this.delClass()}},
+              {text:"点错了"}
+            ]
+          );
+
+
           }}
 
           buttonStyle={

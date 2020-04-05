@@ -5,16 +5,15 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
-  StyleSheet,
-  DatePickerIOS,
-  Picker,
+  Alert
 } from 'react-native';
 
 import {Input, CheckBox, Slider, Button,Icon} from 'react-native-elements';
 import data from '../data/data';
 import {title} from '../kit/common';
 import Modal from '../modal/modal'
+import CoinFall from '../kit/coinFall'
+import Icon2 from 'react-native-vector-icons/FontAwesome5';
 
 
 class App extends React.Component {
@@ -30,8 +29,20 @@ class App extends React.Component {
         uptime: 0,
         relateclass: 0,
       },
+      coinFallNum:0,  //金币掉落动画,
       scoreOption:0 //3个选项，分别是0-2
     };
+  }
+
+  delMile() {
+    data.Instance().delMile(this.state.id).then(
+      ()=>{
+        this.refs.modal.setModalVisible(true,"删除成功");
+          this.props.navigation.navigate('Table', {
+            refresh:true
+          });
+      }
+    )
   }
 
   componentDidMount() {
@@ -88,6 +99,9 @@ class App extends React.Component {
     let leftDay =Math.ceil( (state.data.uptime - new Date().getTime())/3600/24/1000)
 
     let ButtonFinish;
+    let iconsArr=["sad-tear","smile","laugh"];
+
+
     let needFinish = (!this.state.data.coinGot || this.state.data.coinGot<=0);
     if(needFinish) {
 
@@ -111,9 +125,22 @@ class App extends React.Component {
             data.Instance().updateMileById(state.data.id, outputCoin).then(
               ()=>{
                 this.refs.modal.setModalVisible(true,"恭喜你获得"+outputCoin+"枚金币!");
-                  this.props.navigation.navigate('Table', {
+                  /* this.props.navigation.navigate('Table', {
                     refresh:true
-                  });
+                  }); */
+                  this.setState({
+                    coinFallNum:outputCoin
+                  })
+
+                  let data =this.state.data;
+                  data.coinGot = outputCoin
+
+                  setTimeout(() => {
+                    this.setState({
+                      coinFallNum:0,
+                      coinGot:data
+                    })
+                  }, 8000);
               }
             )
           }}></Button>
@@ -125,6 +152,7 @@ class App extends React.Component {
       <View style={{padding: 10}}>
 
 <Modal ref='modal'></Modal>
+<CoinFall count={this.state.coinFallNum}></CoinFall>
 
 
         <View>
@@ -165,8 +193,11 @@ class App extends React.Component {
                   <CheckBox 
                   key={i}
 
-                  title={v}
+                  checkedIcon={<Icon2 name={iconsArr[i]} size={18} color={"green"} />}
+                  uncheckedIcon={<Icon2 name={iconsArr[i]} size={18}/>}
 
+
+                  title={v}
 
                   checked={  i==this.state.scoreOption? true:false }
                   onPress={() => {
@@ -193,14 +224,12 @@ class App extends React.Component {
           title="删除"
           onPress={() => {
 
-            data.Instance().delMile(this.state.id).then(
-              ()=>{
-                this.refs.modal.setModalVisible(true,"删除成功");
-                  this.props.navigation.navigate('Table', {
-                    refresh:true
-                  });
-              }
-            )
+            Alert.alert('确认删除这个里程碑吗？','',
+            [
+              {text:"是的", onPress:()=>{this.delMile()}},
+              {text:"点错了"}
+            ]
+          );
 
 
           }}
