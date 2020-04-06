@@ -20,8 +20,7 @@ class App extends React.Component {
       coin: 5,
       name: '',
       color:0,//0-5，一共6种,
-      classTimeArr:[""]  //备课时间
-
+      classTimeArr:["周一 - 10点 - 40分钟"]  //备课时间
     };
   }
 
