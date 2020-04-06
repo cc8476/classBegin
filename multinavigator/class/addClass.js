@@ -8,7 +8,7 @@ import data from '../data/data';
 
 import {Input, CheckBox, Slider, Button,Icon} from 'react-native-elements';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
-
+import ClassTimePicker from './classComponents/classTimePicker'
 import {title} from '../kit/common';
 import Modal from '../modal/modal'
 
@@ -18,9 +18,9 @@ class App extends React.Component {
 
     this.state = {
       coin: 5,
-      className: '',
-      dayArray:[true,false,false,false,false,false,false],
-      color:0//0-5，一共6种
+      name: '',
+      color:0,//0-5，一共6种,
+      classTimeArr:[""]  //备课时间
 
     };
   }
@@ -43,7 +43,78 @@ class App extends React.Component {
     );
   };
 
+  addPicker() {
+    console.log("addPicker")
+    if(this.state.classTimeArr.length>=7) {
+      return;
+    }
+    let classTimeArr=this.state.classTimeArr;
+    classTimeArr.push("")
+    this.setState({
+      classTimeArr:classTimeArr
+    })
+  }
+
+  setPicker(i,data) {
+    let classTimeArr=this.state.classTimeArr;
+    classTimeArr[i]=data;
+    this.setState({
+      classTimeArr:classTimeArr
+    })
+  }
+
+  destroyPicker(i) {
+
+    if(this.state.classTimeArr.length<=1) {
+      return;
+    }
+
+    let classTimeArr=this.state.classTimeArr;
+    classTimeArr.splice(i,1)
+    console.log("destroyPicker",classTimeArr);
+    this.setState({
+      classTimeArr:classTimeArr
+    })
+
+    
+
+  }
+
+  submit()  {
+
+    console.log("submit",this.state);
+    let hasClass =this.state.classTimeArr.some(
+      (v)=>{
+        if(v!="") {
+          return v;
+        }
+      }
+    )
+
+    if(!this.state.name) {
+      Alert.alert('请输入课程名称');
+    }
+    else if(!hasClass) {
+      Alert.alert('请至少选择一天课');
+    }
+    
+    else {
+      data.Instance().addClass(this.state).then(
+        ()=>{
+          this.refs.modal.setModalVisible(true,"添加成功");
+          this.props.navigation.navigate('Table', {
+            refresh:true
+          });
+        }
+      );
+    }    
+  }
+
   render() {
+
+    
+    
+
     return (
       <View style={{backgroundColor:"#ffffff"}}>
 
@@ -52,7 +123,7 @@ class App extends React.Component {
         <Input style={{padding:5}}
           onChangeText={value => {
             this.setState({
-              className: value,
+              name: value,
             });
           }}
           placeholder="课程名称"
@@ -78,31 +149,24 @@ class App extends React.Component {
           onValueChange={v => this.setState({coin: v })}
         />
 
-        <View style={{flexDirection:"row",flexWrap:"wrap",justifyContent:'center'}}>
+       
+        <View>
 
-          {
-            ["周一","周二","周三","周四","周五","周六","周日"].map(
-              (v,i)=>{
+        {
+          this.state.classTimeArr.map(
+            (v,i)=>{
+              console.log("classTimeArr",v,i);
+              return (<ClassTimePicker key={"class"+i+String(Math.random())} order={i} value={v}
+                add={()=>{this.addPicker()}}
+                destory={(i)=>{this.destroyPicker(i)}}
+                setPicker={(i,v)=>{this.setPicker(i,v)}}
+              
+              ></ClassTimePicker>)
+            }
+          )
+        }
 
-                return (
-                  <CheckBox key={i}
-                  title={v}
-                  checked={this.state.dayArray[i]}
-                  onPress={() => {
-                    let arr = this.state.dayArray;
-                    arr[i] = !arr[i];
-                    this.setState({
-                      dayArray: arr
-                    })
-      
-                  }}
-                />
-                )
-              }
-            )
-          }
-
-        </View>
+        
 
         <Text style={{margin:10,fontSize:20}}>选择标签颜色</Text>
         <View style={{margin:10,flexDirection:"row",flexWrap:"wrap",justifyContent:"center"}}>
@@ -136,9 +200,7 @@ class App extends React.Component {
 
 
         </View>
-
-
-
+        </View>
 
         <Button
         style={{
@@ -147,29 +209,7 @@ class App extends React.Component {
           title="提交"
           onPress={() => {
 
-            let hasClass =this.state.dayArray.some(
-              (v)=>{
-                return v
-              }
-            )
-
-            if(!this.state.className) {
-              Alert.alert('请输入课程名称','something you\'ve forgotten');
-            }
-            else if(!hasClass) {
-              Alert.alert('请至少选择一天课','something you\'ve forgotten');
-            }
-            
-            else {
-              data.Instance().addClass(this.state).then(
-                ()=>{
-                  this.refs.modal.setModalVisible(true,"添加成功");
-                  this.props.navigation.navigate('Table', {
-                    refresh:true
-                  });
-                }
-              );
-            }
+            this.submit();
           }}
 
           icon={

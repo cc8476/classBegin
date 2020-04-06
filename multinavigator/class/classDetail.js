@@ -12,6 +12,7 @@ import data from '../data/data';
 import {title} from '../kit/common';
 import Modal from '../modal/modal'
 import Icon2 from 'react-native-vector-icons/FontAwesome';
+import ClassTimePicker from './classComponents/classTimePicker'
 
 
 
@@ -21,27 +22,56 @@ class App extends React.Component {
 
     this.state = {
       id: props.navigation.state.params.id,
-      data: {
         name: '',
         coin: 0,
         dayArray: [],
-        id: 0,
         relatemile: 0,
         time: 0,
         starttime: 0,
-        color:0
-      },
+        color:0,
+      classTimeArr:[]  //备课时间
     };
   }
 
   componentDidMount() {
+    console.log("componentDidMount",this.state.id)
+
     data
       .Instance()
       .getClassById(this.state.id)
       .then(ret => {
         //{"coin": 5, "dayArray": [1, 2, 3, 4], "id": 11, "name": "C1", "relatemile": "", "starttime": 1585366346212, "time": 0}
+        let classTimeArr=[];
+
+        function weekTxt(i) {
+          switch(i) {
+            case 0:
+              return "周一";
+              case 1:
+                return "周二";
+                case 2:
+                  return "周三";
+                  case 3:
+              return "周四";
+              case 4:
+              return "周五";
+              case 5:
+              return "周六";
+              case 6:
+              return "周日";
+          }
+        }
+
+        ret.dayArray.map(
+          (v,i)=>{
+            if(v) {
+              let str=  weekTxt(i) +" - "+ret.time[i]+"点 - "+ret.duration[i]+"分钟"
+              classTimeArr.push(str);
+            }
+          }
+        )
+
         this.setState({
-          data: {
             name: ret.name,
             coin: ret.coin,
             dayArray: ret.dayArray,
@@ -50,7 +80,7 @@ class App extends React.Component {
             relatemile: ret.relatemile,
             time: ret.time,
             starttime: ret.starttime,
-          },
+          classTimeArr:classTimeArr
         });
 
         if (ret.relatemile > 0) {
@@ -64,6 +94,41 @@ class App extends React.Component {
             });
         }
       });
+  }
+
+  addPicker() {
+    console.log("addPicker")
+    if(this.state.classTimeArr.length>=7) {
+      return;
+    }
+    let classTimeArr=this.state.classTimeArr;
+    classTimeArr.push("")
+    this.setState({
+      classTimeArr:classTimeArr
+    })
+  }
+
+  setPicker(i,data) {
+    let classTimeArr=this.state.classTimeArr;
+    classTimeArr[i]=data;
+    this.setState({
+      classTimeArr:classTimeArr
+    })
+  }
+
+  destroyPicker(i) {
+
+    if(this.state.classTimeArr.length<=1) {
+      return;
+    }
+
+    let classTimeArr=this.state.classTimeArr;
+    classTimeArr.splice(i,1)
+    console.log("destroyPicker",classTimeArr);
+    this.setState({
+      classTimeArr:classTimeArr
+    })
+
   }
 
   delClass()  {
@@ -97,11 +162,15 @@ class App extends React.Component {
     );
   };
 
+  modifyClass() {
+    data.Instance().modifyClass(this.state,this.state.id);
+  }
+
   render() {
     let state = this.state;
 
     let outPutDayArray ="";
-    state.data.dayArray.map(
+    state.dayArray.map(
       (v,i)=>{
         outPutDayArray += "周"+v
       }
@@ -116,11 +185,11 @@ class App extends React.Component {
 
 
         <View>
-          <Text style={{fontSize:25}}>{state.data.name}</Text>
+          <Text style={{fontSize:25}}>{state.name}</Text>
         </View>
 
         <View style={{backgroundColor:"white",padding:10,margin:10}}>
-          <Text style={{margin:5}}>每日金币 ：{state.data.coin}</Text>
+          <Text style={{margin:5}}>每日金币 ：{state.coin}</Text>
 
           <Text style={{margin:5}}
             onPress={() => {
@@ -135,35 +204,19 @@ class App extends React.Component {
 
           <Text style={{margin:5}}>课程安排 ：</Text>
 
-          <View style={{flexDirection:"row",flexWrap:"wrap",justifyContent:"center"}}>
-
-           {
-            state.data.dayArray.map(
-              (v,i)=>{
-
-                return (
-                  <CheckBox key={i}
-                  title={"周"+(i+1)}
-                  checked={v}
-                  onPress={() => {
-                    let output = this.state.data;
-                    let arr = this.state.data.dayArray;
-                    arr[i] = !arr[i];
-                    output.dayArray =arr;
-                    this.setState({
-                      data: output
-                    })
-
-                    data.Instance().updateClassById(this.state.id,output)
-      
-                  }}
-                />
-                )
-              }
-            )
-          } 
-
-</View>
+          {
+          this.state.classTimeArr.map(
+            (v,i)=>{
+              console.log("classTimeArr",v,i);
+              return (<ClassTimePicker key={"class"+i+String(Math.random())} order={i} value={v}
+                add={()=>{this.addPicker()}}
+                destory={(i)=>{this.destroyPicker(i)}}
+                setPicker={(i,v)=>{this.setPicker(i,v)}}
+              
+              ></ClassTimePicker>)
+            }
+          )
+        }
 
 
 
@@ -181,17 +234,17 @@ class App extends React.Component {
                   checkedIcon={<Icon2 name="square" size={18} color={v}/>}
                   uncheckedIcon={<Icon2 name="square-o" size={18} color={v}/>}
 
-                  checked={  i==this.state.data.color? true:false }
+                  checked={  i==this.state.color? true:false }
                   onPress={() => {
 
-                    let newData =this.state.data;
-                    newData.color =i;
+                   /*  let newData =this.state;
+                    newData.color =i; */
 
                     this.setState({
-                      data: newData
+                      color: i
                     })
 
-                    data.Instance().updateClassById(this.state.id,this.state.data);
+                    data.Instance().updateClassById(this.state.id,this.state);
 
                     
       
@@ -207,6 +260,16 @@ class App extends React.Component {
 
 
         </View>
+
+        <Button
+        
+        title="修改"
+        onPress={() => {
+          this.modifyClass()
+        }}
+
+      />
+
 
         <Button
         

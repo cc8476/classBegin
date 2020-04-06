@@ -155,7 +155,10 @@ class Proxy {
   //添加课程
   addClass(obj) {
     //更新用户的课程信息
+    console.log("添加课程addCLass");
     return this.getUser().then(data => {
+
+
       let newData = data;
       newData.classNum = data.classNum + 1;
 
@@ -165,32 +168,81 @@ class Proxy {
       });
 
       //更新课程表信息
+      //obj.classTimeArr:Array(3)
+      // 0:"周一 - 6点 - 10分钟"
+      // 1:"周二 - 9点 10分钟"
+      // 2:"周三 - 19点 50分钟"
 
-      //[false,true,true,false,true,true,true]
-      let dayArrayTransfer =[];
-      obj.dayArray.map(
-        (v,i)=>{
-          if(v) {
-            dayArrayTransfer.push(i+1);
-          }
-        }
-      )
+      /* 要转成dayArray [true,true,true,false,false,false]
+      time:[6,9,19,,,,],//8点
+      duration:[10,10,50,,,,]//50分钟 */
+
+      this.modifyClass(obj,newData.classNum);
+      
+    });
+  }
 
 
-      this.storage.save({
-        key: 'class',
-        id: newData.classNum,
-        data: {
-          name: obj.className,
-          coin: obj.coin,
-          starttime: new Date().getTime(),
-          time: 0, //打卡次数,
-          relatemile: -1,
-          dayArray: obj.dayArray,
-          id: newData.classNum,
-          color: obj.color
-        },
-      });
+  modifyClass(obj,id) {
+    function addWeek(str) {
+      switch(str) {
+          case "周一":
+          return 0;
+          case "周二":
+          return 1;
+          case "周三":
+          return 2;
+          case "周四":
+          return 3;
+          case "周五":
+          return 4;
+          case "周六":
+          return 5;
+          case "周日":
+          return 6;
+  
+      }
+  }
+  
+  function addTime(str){
+      return Number(str.replace("点",""));
+  }
+  
+  function addDuration(str){
+      return Number(str.replace("分钟",""));
+  }
+
+  let week=Array(7).fill(false);
+  let time=Array(7).fill(0);
+  let duration=Array(7).fill(0);
+
+  obj.classTimeArr.map(
+      (v)=>{
+        let arr= v.split(" - ");
+        let index = addWeek(arr[0]);
+        week[index] =true;
+
+        time[index]=addTime(arr[1]);
+        duration[index]=addDuration(arr[2]);
+      }
+  )
+
+
+    this.storage.save({
+      key: 'class',
+      id: id,
+      data: {
+        name: obj.name,
+        coin: obj.coin,
+        starttime: new Date().getTime(),
+        time: 0, //打卡次数,
+        relatemile: -1,
+        dayArray: week,
+        time: time,
+        duration: duration,
+        id: id,
+        color: obj.color
+      },
     });
   }
 
