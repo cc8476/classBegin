@@ -4,19 +4,18 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 
-import {Button,Overlay} from 'react-native-elements';
-
+import {Button, Overlay} from 'react-native-elements';
 
 /**
  * 如何使用：
- * 
+ *
  * 1.放在父组件的render函数里面
  * <Modal ref='modal'></Modal>
  * 2.在函数内调用如下代码：
- * this.refs.modal.setModalVisible(true,"清除ok!!!");
- * 
- * 
- * 
+ * this.refs.modal.setModalVisible("清除ok!!!");
+ *
+ *
+ *
  */
 
 class MyModal extends React.Component {
@@ -25,13 +24,12 @@ class MyModal extends React.Component {
 
     this.state = {
       modalVisible: false,
-      modalText:""
+      modalText: '',
     };
   }
 
-  setModalVisible(visible, text) {
-    console.log("modal dddd");
-    this.setState({modalVisible: visible, modalText: text});
+  setModalVisible(text) {
+    this.setState({modalVisible: true, modalText: text});
   }
 
   render() {
@@ -62,12 +60,11 @@ class MyModal extends React.Component {
             style={{margin: 30}}
             title="知道了"
             onPress={() => {
-              this.setState(
-                {
-                  "modalVisible":false
-                }
-              )
-            }}></Button>
+              this.setState({
+                modalVisible: false,
+              });
+            }}
+          />
         </View>
       </Overlay>
     );

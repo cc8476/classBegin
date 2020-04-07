@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 class Proxy {
   constructor() {
-    this.speed = 100; //播放速度
     this.storage;
   }
 
@@ -38,18 +37,18 @@ class Proxy {
 
     // 获取某个key下的所有数据(仅key-id数据)
     this.storage.getAllDataForKey('class').then(users => {
-      console.log("所有class信息")
+      console.log('所有class信息');
       console.log(users);
     });
 
     this.storage.getAllDataForKey('record').then(users => {
-      console.log("所有record信息:")
+      console.log('所有record信息:');
       console.log(users);
     });
 
     // 获取某个key下的所有数据(仅key-id数据)
     this.storage.getAllDataForKey('mile').then(users => {
-      console.log("所有mile信息:")
+      console.log('所有mile信息:');
       console.log(users);
     });
   }
@@ -59,7 +58,7 @@ class Proxy {
     this.storage.save({
       key: 'user', // 注意:请不要在key中使用_下划线符号!
       data: {
-        name: '陈大诺',
+        name: '陈诺',
         classNum: 0, //课程数
         mileNum: 0, //里程碑数量
         coin: 0, //金币数量
@@ -67,9 +66,6 @@ class Proxy {
         time: 0, //打卡次数
       },
     });
-
-    
-
   }
 
   //清除缓存
@@ -101,64 +97,49 @@ class Proxy {
     });
   }
 
-
   //获取课程列表
   getClasses() {
     return this.storage.getAllDataForKey('class');
   }
   //获取课程列表,根据星期x
   getClassesByWeek(weekOrder) {
-    return this.storage.getAllDataForKey('class').then((ret)=>{
-
-      let weekClasses=[] ;
-      console.log("rrrrr",ret);
-      console.log("weekOrder",weekOrder);
-
-       ret.map(
-        (v,i)=>{
-          if(v.dayArray[weekOrder]  ) {
-            weekClasses.push(v); 
-            console.log("vvvvv",v);
-          }
+    return this.storage.getAllDataForKey('class').then(ret => {
+      let weekClasses = [];
+      ret.map((v, i) => {
+        if (v.dayArray[weekOrder]) {
+          weekClasses.push(v);
+          console.log('vvvvv', v);
         }
-      )
-
+      });
       return weekClasses;
-
     });
   }
 
-
-
   //根据课程id获取课程信息
   getClassById(id) {
-    return this.storage
-    .load({
+    return this.storage.load({
       key: 'class',
-      id: id
-    })
+      id: id,
+    });
   }
 
-    //获取里程碑列表
-    getMiles() {
-      return this.storage.getAllDataForKey('mile');
-    }
+  //获取里程碑列表
+  getMiles() {
+    return this.storage.getAllDataForKey('mile');
+  }
 
   getMileById(id) {
-    return this.storage
-    .load({
+    return this.storage.load({
       key: 'mile',
-      id: id
-    })
+      id: id,
+    });
   }
 
   //添加课程
   addClass(obj) {
     //更新用户的课程信息
-    console.log("添加课程addCLass");
+    console.log('添加课程addCLass');
     return this.getUser().then(data => {
-
-
       let newData = data;
       newData.classNum = data.classNum + 1;
 
@@ -177,56 +158,50 @@ class Proxy {
       time:[6,9,19,,,,],//8点
       duration:[10,10,50,,,,]//50分钟 */
 
-      this.modifyClass(obj,newData.classNum);
-      
+      this.modifyClass(obj, newData.classNum);
     });
   }
 
-
-  modifyClass(obj,id) {
+  modifyClass(obj, id) {
     function addWeek(str) {
-      switch(str) {
-          case "周一":
+      switch (str) {
+        case '周一':
           return 0;
-          case "周二":
+        case '周二':
           return 1;
-          case "周三":
+        case '周三':
           return 2;
-          case "周四":
+        case '周四':
           return 3;
-          case "周五":
+        case '周五':
           return 4;
-          case "周六":
+        case '周六':
           return 5;
-          case "周日":
+        case '周日':
           return 6;
-  
       }
-  }
-  
-  function addTime(str){
-      return Number(str.replace("点",""));
-  }
-  
-  function addDuration(str){
-      return Number(str.replace("分钟",""));
-  }
+    }
 
-  let week=Array(7).fill(false);
-  let time=Array(7).fill(0);
-  let duration=Array(7).fill(0);
+    function addTime(str) {
+      return Number(str.replace('点', ''));
+    }
 
-  obj.classTimeArr.map(
-      (v)=>{
-        let arr= v.split(" - ");
-        let index = addWeek(arr[0]);
-        week[index] =true;
+    function addDuration(str) {
+      return Number(str.replace('分钟', ''));
+    }
 
-        time[index]=addTime(arr[1]);
-        duration[index]=addDuration(arr[2]);
-      }
-  )
+    let week = Array(7).fill(false);
+    let time = Array(7).fill(0);
+    let duration = Array(7).fill(0);
 
+    obj.classTimeArr.map(v => {
+      let arr = v.split(' - ');
+      let index = addWeek(arr[0]);
+      week[index] = true;
+
+      time[index] = addTime(arr[1]);
+      duration[index] = addDuration(arr[2]);
+    });
 
     this.storage.save({
       key: 'class',
@@ -241,37 +216,35 @@ class Proxy {
         time: time,
         duration: duration,
         id: id,
-        color: obj.color
+        color: obj.color,
       },
     });
   }
 
-    //删除课程
-    delClass(id) {
+  //删除课程
+  delClass(id) {
+    this.getUser().then(data => {
+      let newData = data;
+      newData.classNum = data.classNum - 1;
 
-      this.getUser().then(data => {
-        let newData = data;
-        newData.classNum = data.classNum - 1;
-  
-        this.storage.save({
-          key: 'user',
-          data: newData,
-        });
+      this.storage.save({
+        key: 'user',
+        data: newData,
       });
+    });
 
-      return this.storage.remove({
-        key: 'class',
-        id: id
-      });
-    }
-
-    //更新课程
-  updateClassById(id,data) {
-
-     this.storage.save({
+    return this.storage.remove({
       key: 'class',
-      id:id,
-      data: data
+      id: id,
+    });
+  }
+
+  //更新课程
+  updateClassById(id, data) {
+    this.storage.save({
+      key: 'class',
+      id: id,
+      data: data,
     });
   }
 
@@ -306,30 +279,22 @@ class Proxy {
 
       //更新关联的class信息
 
-      console.log("obj.relateclass",obj.relateclass);
-
-      if(obj.relateclass>=0) {
-        this.getClassById(obj.relateclass).then(
-          (ret)=>{
-            const result =ret;
-            console.log("obj.relateclass result",obj.relateclass,result);
-            result.relatemile = mileId;
-            console.log("obj.relateclass result2",obj.relateclass,result);
-            this.storage.save({
-              key: 'class', 
-              id: obj.relateclass, 
-              data: result
-            });
-          }
-        )
+      if (obj.relateclass >= 0) {
+        this.getClassById(obj.relateclass).then(ret => {
+          const result = ret;
+          result.relatemile = mileId;
+          this.storage.save({
+            key: 'class',
+            id: obj.relateclass,
+            data: result,
+          });
+        });
       }
-
     });
   }
 
   //删除里程碑
   delMile(id) {
-
     this.getUser().then(data => {
       let newData = data;
       newData.mileNum = data.mileNum - 1;
@@ -340,96 +305,80 @@ class Proxy {
       });
     });
 
-
     return this.storage.remove({
       key: 'mile',
-      id: id
+      id: id,
     });
   }
 
   addRecord(coin) {
+    this.getUser().then(user => {
+      //user.date  //用户注册日期为第一天，也就是id=1
+      // 当前时间-注册当天 / 86400*1000 ，0=当天
+      let firstDayTime = new Date(
+        new Date(user.date).toLocaleDateString(),
+      ).getTime();
+      let days = Math.floor((new Date().getTime() - firstDayTime) / 86400000); //days,就是它的id
 
+      console.log('addRecord', days, coin);
 
-    this.getUser().then(
-      (user)=>{
-        //user.date  //用户注册日期为第一天，也就是id=1
-        // 当前时间-注册当天 / 86400*1000 ，0=当天
-        let firstDayTime = new Date(new Date(user.date).toLocaleDateString()).getTime();
-        let days =Math.floor((new Date().getTime()  - firstDayTime)/86400000)  //days,就是它的id
-        
-        console.log("addRecord",days,coin);
-
-        this.storage.save({
-          key: 'record',
+      this.storage.save({
+        key: 'record',
+        id: days,
+        data: {
           id: days,
-          data: {
-            id: days,
-            coin: coin,
-            date:new Date().getTime()
-          },
-        });
-      }
-    )
+          coin: coin,
+          date: new Date().getTime(),
+        },
+      });
+    });
   }
-
 
   //检查今天是否已经打卡
   getTodayClassCoin() {
-    console.log("checkScore")
-    return this.getUser().then(
-      (user)=>{
+    console.log('checkScore');
+    return this.getUser()
+      .then(user => {
         //user.date  //用户注册日期为第一天，也就是id=1
         // 当前时间-注册当天 / 86400*1000 ，0=当天
-        let firstDayTime = new Date(new Date(user.date).toLocaleDateString()).getTime();
-        let days =Math.floor((new Date().getTime()  - firstDayTime)/86400000)  //days,就是它的id
-        return this.storage
-        .load({
+        let firstDayTime = new Date(
+          new Date(user.date).toLocaleDateString(),
+        ).getTime();
+        let days = Math.floor((new Date().getTime() - firstDayTime) / 86400000); //days,就是它的id
+        return this.storage.load({
           key: 'record',
-          id: days
-        })
-
-      }
-    ).then(
-      (ret)=>{
-        console.log("ret",ret)
+          id: days,
+        });
+      })
+      .then(ret => {
+        console.log('ret', ret);
         return ret.coin;
-      }
-    ).catch(
-      (err)=>{
-        console.log("err",err)
+      })
+      .catch(err => {
+        console.log('err', err);
         return -1;
-      } 
-    )
+      });
   }
 
-  
-
-
   //更新里程碑
-  updateMileById(id,score) {
-
-
+  updateMileById(id, score) {
     return this.getMileById(id).then(data => {
       let newData = data;
-      newData.coinGot =  score;
+      newData.coinGot = score;
 
       this.addCoin(score);
 
       this.storage.save({
         key: 'mile',
-        id:id,
-        data: newData
+        id: id,
+        data: newData,
       });
     });
-
   }
 }
 Proxy.ins = null;
 
-Proxy.colorArray=["green","red","blue","#fcaf17","purple","pink"];
-Proxy.scoreArray=["还需努力","正常发挥","非常出色"];
-
+Proxy.colorArray = ['green', 'red', 'blue', '#fcaf17', 'purple', 'pink'];
+Proxy.scoreArray = ['还需努力', '正常发挥', '非常出色'];
 
 export default Proxy;
-//How to use:
-//MyClass.Instance().getSpeed();

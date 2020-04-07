@@ -3,11 +3,10 @@
  */
 
 import {AppRegistry} from 'react-native';
-import App from './multinavigator/container';
+import App from './multinavigator/rootContainer';
 //import App from './testApp';
-import {name as appName} from './app.json';
-
 import data from './multinavigator/data/data';
+import {name as appName} from './app.json';
 
 data.Instance().init();
 

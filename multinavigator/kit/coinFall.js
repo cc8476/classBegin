@@ -109,8 +109,46 @@ const range = count => {
 
 
 
-const MakeItRain = ({ count = 10, duration = 3000 }) => (
-  <ErlichBachman>
+
+
+
+
+class MakeItRain extends React.Component {
+  constructor(props) {
+    super(props);
+    this.props =props;
+    this.state={
+      count:0,
+      duration:3000
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.setState(
+        {
+          count:nextProps.count
+        }
+    )
+}
+  render() {
+
+    let count =this.state.count;
+    let duration =this.state.duration;
+
+    if(count>0) {
+      setTimeout(
+        ()=>{
+          this.setState(
+            {
+              count:0
+            }
+        )
+        },8000
+      )
+    }
+
+    return (
+<ErlichBachman>
     {range(count)
       .map(i => randomize(1000))
       .map((flipDelay, i) => (
@@ -139,6 +177,9 @@ const MakeItRain = ({ count = 10, duration = 3000 }) => (
         </Falling>
       ))}
   </ErlichBachman>
-);
+    );
+  }
+}
 
 export default MakeItRain;
+//ReactDOM.render(<App />,document.getElementById('root'));

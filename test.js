@@ -1,3 +1,7 @@
-let cols= new Array(7).fill([]);
+function getNavigation(label, icon) {
 
-console.log(cols)
+    return {
+        tabBarLabel: "label",
+        tabBarIcon: "icon"
+    }
+}

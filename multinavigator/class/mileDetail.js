@@ -29,7 +29,6 @@ class App extends React.Component {
         uptime: 0,
         relateclass: 0,
       },
-      coinFallNum:0,  //金币掉落动画,
       scoreOption:0 //3个选项，分别是0-2
     };
   }
@@ -37,7 +36,7 @@ class App extends React.Component {
   delMile() {
     data.Instance().delMile(this.state.id).then(
       ()=>{
-        this.refs.modal.setModalVisible(true,"删除成功");
+        this.refs.modal.setModalVisible("删除成功");
           this.props.navigation.navigate('Table', {
             refresh:true
           });
@@ -122,25 +121,22 @@ class App extends React.Component {
                   break;
           }
 
+          outputCoin=Math.round(outputCoin)
+
             data.Instance().updateMileById(state.data.id, outputCoin).then(
               ()=>{
-                this.refs.modal.setModalVisible(true,"恭喜你获得"+outputCoin+"枚金币!");
+                this.refs.modal.setModalVisible("恭喜你获得"+outputCoin+"枚金币!");
                   /* this.props.navigation.navigate('Table', {
                     refresh:true
                   }); */
-                  this.setState({
-                    coinFallNum:outputCoin
-                  })
+
 
                   let data =this.state.data;
                   data.coinGot = outputCoin
 
-                  setTimeout(() => {
-                    this.setState({
-                      coinFallNum:0,
-                      coinGot:data
-                    })
-                  }, 8000);
+                  this.setState({
+                    coinGot:data
+                  })
               }
             )
           }}></Button>
@@ -152,7 +148,7 @@ class App extends React.Component {
       <View style={{padding: 10}}>
 
 <Modal ref='modal'></Modal>
-<CoinFall count={this.state.coinFallNum}></CoinFall>
+<CoinFall count={this.state.coinGot}></CoinFall>
 
 
         <View>

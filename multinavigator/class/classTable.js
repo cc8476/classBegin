@@ -2,33 +2,25 @@
  * Created by joechen  2020-03-22 18:28
  */
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import data from '../data/data';
 import {Button, ButtonGroup} from 'react-native-elements';
 import MileList from './classTableMileList';
 
-import Table from './classComponents/classTableDetail'
+import Table from './classComponents/classTableDetail';
 
 import {title} from '../kit/common';
 
 class App extends React.Component {
-
-  
-
   constructor(props) {
     super(props);
 
-    this.firstData={
+    this.firstData = {
       tableData: [],
       miles: [],
-      selected:0,  //里程碑按钮标签 1=未完成，0=已完成
-      init:-1  //默认是-2，初始化class+1,初始化mile加1
-    }
-
+      selected: 0, //里程碑按钮标签 1=未完成，0=已完成
+      init: -1, //默认是-2，初始化class+1,初始化mile加1
+    };
 
     this.state = this.firstData;
   }
@@ -36,29 +28,26 @@ class App extends React.Component {
   componentWillReceiveProps() {
     this.initData();
   }
-  shouldComponentUpdate() {
-  }
+  shouldComponentUpdate() {}
 
   componentDidMount() {
     this.initData();
   }
 
   initData() {
-
     data
       .Instance()
       .getMiles()
       .then(ret => {
-
-        const currentInit=this.state.init;
+        const currentInit = this.state.init;
         this.setState({
-          init:currentInit+1
-        })
+          init: currentInit + 1,
+        });
 
         this.setState({
           miles: ret,
         });
-      });    
+      });
   }
 
   static navigationOptions = ({navigation}) => {
@@ -66,7 +55,7 @@ class App extends React.Component {
       {
         headerLeft: () => {
           return (
-            <Button 
+            <Button
               type="clear"
               title="添加课程"
               onPress={() => {
@@ -78,13 +67,12 @@ class App extends React.Component {
         headerRight: () => {
           return (
             <Button
-
-          
               title="里程碑"
               type="clear"
               onPress={() => {
                 navigation.navigate('AddMile');
-              }}></Button>
+              }}
+            />
           );
         },
       },
@@ -92,83 +80,76 @@ class App extends React.Component {
     );
   };
 
-  shouldComponentUpdate(nextProps,nextState) {
-
-    console.log("this.state.init",this.state.init)
-    if(this.state.init!=0) {
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('this.state.init', this.state.init);
+    if (this.state.init != 0) {
       return false;
-    }
-    else {
+    } else {
       return true;
     }
   }
 
   render() {
-
-
     const buttons = ['接下来', '已完成'];
 
     const state = this.state;
 
     let milesArr = state.miles;
-    let showmilesArr=[];
-    milesArr.map(
-      (v,i)=>{
+    let showmilesArr = [];
+    milesArr.map((v, i) => {
+      const daytime = new Date(
+        new Date(new Date()).toLocaleDateString(),
+      ).getTime();
 
-        const daytime =new Date(new Date(new Date() ).toLocaleDateString()).getTime()
-
-        if(this.state.selected==0) {
-          if( v.uptime>=daytime) {
-            console.log("selet",0)
-            showmilesArr.push(v);
-          }
+      if (this.state.selected == 0) {
+        if (v.uptime >= daytime) {
+          console.log('selet', 0);
+          showmilesArr.push(v);
         }
-        else if(this.state.selected==1) {
-          if( v.uptime<daytime) {
-            console.log("selet",1)
-            showmilesArr.push(v);
-          }
+      } else if (this.state.selected == 1) {
+        if (v.uptime < daytime) {
+          console.log('selet', 1);
+          showmilesArr.push(v);
         }
       }
-    )
-    showmilesArr.sort((a,b)=>{
+    });
+    showmilesArr.sort((a, b) => {
       return a.uptime - b.uptime;
-    })
+    });
 
     return (
-      <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff'}}>
-        <Table navigation={this.props.navigation} ></Table>
-        
-        <View style={{flex:1,flexDirection:"column",justifyContent:"center",marginTop:20}}>
-          <ButtonGroup
-             onPress={
-                ()=>{
-                 this.setState(
-                  {
-                    selected:  (this.state.selected==1)?0:1
-                  }
-                 ) 
-                }
+      <View
+        style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff'}}>
+        <Table navigation={this.props.navigation} />
 
-             }
-            selectedIndex={this.state.selected} 
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            marginTop: 20,
+          }}>
+          <ButtonGroup
+            onPress={() => {
+              this.setState({
+                selected: this.state.selected == 1 ? 0 : 1,
+              });
+            }}
+            selectedIndex={this.state.selected}
             buttons={buttons}
             containerStyle={{height: 25}}
           />
 
-          <Text style={{margin:10}}>最近的里程碑:</Text>
-      
-             <MileList navigation={this.props.navigation} showmilesArr={showmilesArr}></MileList>
+          <Text style={{margin: 10}}>最近的里程碑:</Text>
 
-             </View>
-
-        
-
-        
+          <MileList
+            navigation={this.props.navigation}
+            showmilesArr={showmilesArr}
+          />
+        </View>
       </View>
     );
   }
 }
 
 export default App;
-
