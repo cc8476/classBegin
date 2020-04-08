@@ -141,7 +141,7 @@ class App extends React.Component {
           }}
           title="提交"
           onPress={() => {
-            this.submit()
+            this.submit();
           }}
           icon={<Icon name="check" size={35} color="white" />}
         />

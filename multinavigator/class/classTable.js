@@ -16,8 +16,8 @@ class App extends React.Component {
     super(props);
 
     this.firstData = {
-      tableData: [],
-      miles: [],
+      tableData: null,
+      miles: null,
       selected: 0, //里程碑按钮标签 1=未完成，0=已完成
       init: -1, //默认是-2，初始化class+1,初始化mile加1
     };
@@ -81,7 +81,7 @@ class App extends React.Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log('this.state.init', this.state.init);
+    console.log('classTable shouldComponentUpdate');
     if (this.state.init != 0) {
       return false;
     } else {
@@ -103,12 +103,10 @@ class App extends React.Component {
 
       if (this.state.selected == 0) {
         if (v.uptime >= daytime) {
-          console.log('selet', 0);
           showmilesArr.push(v);
         }
       } else if (this.state.selected == 1) {
         if (v.uptime < daytime) {
-          console.log('selet', 1);
           showmilesArr.push(v);
         }
       }

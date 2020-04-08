@@ -236,8 +236,6 @@ class App extends React.Component {
                   uncheckedIcon={<Icon2 name="square-o" size={18} color={v} />}
                   checked={i == this.state.color ? true : false}
                   onPress={() => {
-                    /*  let newData =this.state;
-                    newData.color =i; */
 
                     this.setState({
                       color: i,

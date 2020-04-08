@@ -76,7 +76,7 @@ class Proxy {
 
     this.storage.clearMap();
   }
-
+  //获取用户信息
   getUser() {
     return this.storage.load({
       key: 'user',
@@ -123,18 +123,6 @@ class Proxy {
     });
   }
 
-  //获取里程碑列表
-  getMiles() {
-    return this.storage.getAllDataForKey('mile');
-  }
-
-  getMileById(id) {
-    return this.storage.load({
-      key: 'mile',
-      id: id,
-    });
-  }
-
   //添加课程
   addClass(obj) {
     //更新用户的课程信息
@@ -161,7 +149,7 @@ class Proxy {
       this.modifyClass(obj, newData.classNum);
     });
   }
-
+  //修改课程
   modifyClass(obj, id) {
     function addWeek(str) {
       switch (str) {
@@ -290,6 +278,18 @@ class Proxy {
           });
         });
       }
+    });
+  }
+  
+  //获取里程碑列表
+  getMiles() {
+    return this.storage.getAllDataForKey('mile');
+  }
+  //根据id获取里程碑
+  getMileById(id) {
+    return this.storage.load({
+      key: 'mile',
+      id: id,
     });
   }
 
